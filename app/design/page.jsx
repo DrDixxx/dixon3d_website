@@ -18,23 +18,23 @@ export default function DesignPage() {
         <div className="grid md:grid-cols-4 gap-3">
           <article className="bubble rounded-2xl p-4">
             <div className="text-yellow-300">★★★★★</div>
-            <p className="text-sm mt-1">“Dimensions were spot on and surface finish looked great.”</p>
-            <div className="text-xs text-slate-300 mt-2">— Alex R.</div>
+            <p className="text-sm mt-1">“Fit great and slid like new!”</p>
+            <div className="text-xs text-slate-300 mt-2">— Amy D.</div>
           </article>
-          <article className="bubble rounded-2xl p-4 md:translate-y-4">
+          <article className="bubble rounded-2xl p-4 md:translate-y+1">
             <div className="text-yellow-300">★★★★★</div>
-            <p className="text-sm mt-1">“Quick iterations; we went from sketch to fit-check in a week.”</p>
-            <div className="text-xs text-slate-300 mt-2">— Priya K.</div>
+            <p className="text-sm mt-1">“Fun ideas and gave some quick turnaround.”</p>
+            <div className="text-xs text-slate-300 mt-2">— Nate M.</div>
           </article>
           <article className="bubble rounded-2xl p-4 md:-translate-y-2">
             <div className="text-yellow-300">★★★★★</div>
-            <p className="text-sm mt-1">“Tooling for thermoforming arrived ready to run—no tweaks.”</p>
-            <div className="text-xs text-slate-300 mt-2">— Mark D.</div>
+            <p className="text-sm mt-1">“Perfect addition to the desk.”</p>
+            <div className="text-xs text-slate-300 mt-2">— Mark M.</div>
           </article>
-          <article className="bubble rounded-2xl p-4 md:translate-y-6">
+          <article className="bubble rounded-2xl p-4 md:translate-y+3">
             <div className="text-yellow-300">★★★★★</div>
-            <p className="text-sm mt-1">“Clear communication on tolerances and material choice.”</p>
-            <div className="text-xs text-slate-300 mt-2">— Jenna S.</div>
+            <p className="text-sm mt-1">“Clear communication on limitations and material choice.”</p>
+            <div className="text-xs text-slate-300 mt-2">— Chelsey S.</div>
           </article>
         </div>
       </section>

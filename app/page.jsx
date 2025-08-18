@@ -107,7 +107,7 @@ export default function HomePage() {
             </article>
             <article className="card rounded-2xl p-5">
               <h3 className="text-lg font-semibold">Standard Tolerances</h3>
-              <p className="mt-2 text-sm">± 0.01–0.001 depending on technology.</p>
+              <p className="mt-2 text-sm">± 0.01–0.001 in. depending on production and finish.</p>
             </article>
             <article className="card rounded-2xl p-5">
               <h3 className="text-lg font-semibold">Popular Items</h3>
@@ -133,10 +133,11 @@ export default function HomePage() {
             />
           </figure>
           <div className="p-6 md:p-10 flex flex-col justify-center">
-            <div className="text-sm text-slate-300">CAD spotlight</div>
-            <h3 className="mt-2 text-2xl font-semibold text-white">Window attachment drawing</h3>
+            <div className="text-sm text-slate-300">Parametric Modeling, Production-ready Details</div>
+            <h3 className="mt-2 text-2xl font-semibold text-white">Services You Can Trust</h3>
             <p className="mt-3 text-slate-200">
-              Manufacturing drawing with multiple views and a clean title block.
+              We take your designs seriously. Our team ensures that every part is modeled with precision
+              and creation in mind ensuring accuracy and flexibility for your projects. 
             </p>
           </div>
         </div>
