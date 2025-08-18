@@ -60,9 +60,9 @@ export default function ShopPage() {
         </div>
         <div className="mt-4 md:mt-0 flex gap-2">
           <input value={search} onChange={e=>setSearch(e.target.value)}
-                 placeholder="Search…" className="w-56 rounded-xl bg-white px-3 py-2 text-sm outline-none ring-1 ring-black/10"/>
+                 placeholder="Search…" className="w-56 rounded-xl input-soft px-3 py-2 text-sm"/>
           <select value={filter} onChange={e=>setFilter(e.target.value)}
-                  className="rounded-xl bg-white px-3 py-2 text-sm ring-1 ring-black/10">
+                  className="rounded-xl input-soft px-3 py-2 text-sm">
             {cats.map(c => <option key={c}>{c}</option>)}
           </select>
         </div>
@@ -80,9 +80,9 @@ export default function ShopPage() {
               <p className="text-xs text-slate-400 mt-1">{p.material} • {p.category}</p>
               <div className="mt-3 flex items-center gap-2">
                 <input type="number" min="1" defaultValue="1" id={`qty-${p.id}`}
-                       className="w-16 rounded-lg bg-white px-2 py-1 text-sm ring-1 ring-black/10 text-slate-900"/>
+                       className="w-16 rounded-lg input-soft px-2 py-1 text-sm"/>
                 <button onClick={() => add(p.id, parseInt(document.getElementById(`qty-${p.id}`).value || "1", 10))}
-                        className="rounded-lg bg-slate-900 text-white px-3 py-1.5 text-xs font-semibold hover:bg-slate-800">
+                        className="rounded-lg bubble px-3 py-1.5 text-xs font-semibold hover:brightness-110">
                   Add
                 </button>
               </div>
@@ -107,7 +107,7 @@ export default function ShopPage() {
                 <div className="mt-2 flex items-center gap-2">
                   <input type="number" min="1" value={it.qty}
                          onChange={(e)=>updateQty(it.key, parseInt(e.target.value||"1",10))}
-                         className="w-16 rounded-lg bg-white px-2 py-1 text-sm ring-1 ring-black/10"/>
+                         className="w-16 rounded-lg input-soft px-2 py-1 text-sm"/>
                   <button onClick={()=>removeItem(it.key)} className="text-xs text-slate-600 hover:text-black">Remove</button>
                 </div>
               </div>
@@ -115,7 +115,7 @@ export default function ShopPage() {
           ))}
         </div>
         <button onClick={checkout}
-                className="mt-4 w-full rounded-xl bg-slate-900 text-white px-5 py-2.5 text-sm font-semibold hover:bg-slate-800">
+                className="mt-4 w-full rounded-xl bubble px-5 py-2.5 text-sm font-semibold hover:brightness-110">
           Checkout with PayPal
         </button>
       </section>

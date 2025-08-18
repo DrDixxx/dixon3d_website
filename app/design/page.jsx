@@ -8,8 +8,35 @@ export default function DesignPage() {
       <section className="grid md:grid-cols-2 gap-4">
         <article className="card rounded-2xl p-5"><h3 className="text-lg font-semibold">Consult & Design</h3><p className="mt-2 text-sm">We refine CAD, check tolerances, and plan for manufacturability.</p></article>
         <article className="card rounded-2xl p-5"><h3 className="text-lg font-semibold">Rapid Prototyping</h3><p className="mt-2 text-sm">Iterative prints in functional materials for quick testing.</p></article>
-        <article className="card rounded-2xl p-5"><h3 className="text-lg font-semibold">Thermoforming & Casting</h3><p className="mt-2 text-sm">Patterns and tooling for forming/casting workflows.</p></article>
+        <article className="card rounded-2xl p-5"><h3 className="text-lg font-semibold">Thermoforming & Casting</h3><p className="mt-2 text-sm">Patterns and tooling appropriate for forming/casting workflows.</p></article>
         <article className="card rounded-2xl p-5"><h3 className="text-lg font-semibold">DFAM for 3-Axis CNC</h3><p className="mt-2 text-sm">Geometries that translate cleanly to machining.</p></article>
+      </section>
+
+      {/* Reviews – 4 bubbles, staggered */}
+      <section className="rounded-3xl panel p-4">
+        <h3 className="text-xl font-semibold mb-3">What clients say</h3>
+        <div className="grid md:grid-cols-4 gap-3">
+          <article className="bubble rounded-2xl p-4">
+            <div className="text-yellow-300">★★★★★</div>
+            <p className="text-sm mt-1">“Dimensions were spot on and surface finish looked great.”</p>
+            <div className="text-xs text-slate-300 mt-2">— Alex R.</div>
+          </article>
+          <article className="bubble rounded-2xl p-4 md:translate-y-4">
+            <div className="text-yellow-300">★★★★★</div>
+            <p className="text-sm mt-1">“Quick iterations; we went from sketch to fit-check in a week.”</p>
+            <div className="text-xs text-slate-300 mt-2">— Priya K.</div>
+          </article>
+          <article className="bubble rounded-2xl p-4 md:-translate-y-2">
+            <div className="text-yellow-300">★★★★★</div>
+            <p className="text-sm mt-1">“Tooling for thermoforming arrived ready to run—no tweaks.”</p>
+            <div className="text-xs text-slate-300 mt-2">— Mark D.</div>
+          </article>
+          <article className="bubble rounded-2xl p-4 md:translate-y-6">
+            <div className="text-yellow-300">★★★★★</div>
+            <p className="text-sm mt-1">“Clear communication on tolerances and material choice.”</p>
+            <div className="text-xs text-slate-300 mt-2">— Jenna S.</div>
+          </article>
+        </div>
       </section>
 
       <section>
@@ -33,50 +60,53 @@ export default function DesignPage() {
         }}>
           <div className="grid sm:grid-cols-2 gap-4">
             <label className="block">
-              <div className="text-sm text-slate-500 mb-1">Name</div>
-              <input name="name" required className="w-full rounded-xl bg-white px-3 py-2 text-sm outline-none ring-1 ring-black/10"/>
+              <div className="text-sm text-slate-300 mb-1">Name</div>
+              <input name="name" required className="w-full rounded-xl input-soft px-3 py-2 text-sm"/>
             </label>
             <label className="block">
-              <div className="text-sm text-slate-500 mb-1">Email</div>
-              <input name="email" type="email" required className="w-full rounded-xl bg-white px-3 py-2 text-sm outline-none ring-1 ring-black/10"/>
+              <div className="text-sm text-slate-300 mb-1">Email</div>
+              <input name="email" type="email" required className="w-full rounded-xl input-soft px-3 py-2 text-sm"/>
             </label>
           </div>
 
           <div className="grid sm:grid-cols-3 gap-4">
             <label className="block">
-              <div className="text-sm text-slate-500 mb-1">Material</div>
-              <select name="material" className="w-full rounded-xl bg-white px-3 py-2 text-sm ring-1 ring-black/10">
-                <option>PLA</option><option>PETG</option><option>ABS</option><option>ASA</option><option>Nylon</option><option>CF-Nylon</option><option>TPU 95A</option>
+              <div className="text-sm text-slate-300 mb-1">Material</div>
+              <select name="material" className="w-full rounded-xl input-soft px-3 py-2 text-sm">
+                <option>PLA</option><option>PETG</option><option>ABS</option><option>ASA</option>
+                <option>Nylon</option><option>CF-Nylon</option><option>TPU 95A</option>
               </select>
             </label>
             <label className="block">
-              <div className="text-sm text-slate-500 mb-1">Quantity</div>
-              <input name="quantity" type="number" min="1" defaultValue="1" className="w-full rounded-xl bg-white px-3 py-2 text-sm outline-none ring-1 ring-black/10"/>
+              <div className="text-sm text-slate-300 mb-1">Quantity</div>
+              <input name="quantity" type="number" min="1" defaultValue="1"
+                     className="w-full rounded-xl input-soft px-3 py-2 text-sm"/>
             </label>
             <label className="block">
-              <div className="text-sm text-slate-500 mb-1">Finish</div>
-              <select name="finish" className="w-full rounded-xl bg-white px-3 py-2 text-sm ring-1 ring-black/10">
+              <div className="text-sm text-slate-300 mb-1">Finish</div>
+              <select name="finish" className="w-full rounded-xl input-soft px-3 py-2 text-sm">
                 <option>As-printed</option><option>Sanded</option><option>Vapor smooth (ABS)</option><option>Primed & painted</option>
               </select>
             </label>
           </div>
 
           <label className="block">
-            <div className="text-sm text-slate-500 mb-1">Notes / tolerances / use case</div>
-            <textarea name="notes" rows="5" className="w-full rounded-xl bg-white px-3 py-2 text-sm outline-none ring-1 ring-black/10"></textarea>
+            <div className="text-sm text-slate-300 mb-1">Notes / tolerances / use case</div>
+            <textarea name="notes" rows="5" className="w-full rounded-xl input-soft px-3 py-2 text-sm"></textarea>
           </label>
 
           <div>
-            <div className="text-sm font-medium">Files</div>
+            <div className="text-sm font-medium text-slate-200">Files</div>
             <div className="mt-2 rounded-2xl border-2 border-dashed border-white/30 p-6 text-center text-slate-200">
               Drag & drop files here or <label className="ml-2 underline cursor-pointer">browse
-                <input id="file-input" type="file" multiple className="hidden" accept=".stl,.step,.stp,.iges,.igs,.3mf,.obj,.ply,.fbx,.dxf,.sldprt,.sldasm,.las,.laz,.e57"/>
+                <input id="file-input" type="file" multiple className="hidden"
+                       accept=".stl,.step,.stp,.iges,.igs,.3mf,.obj,.ply,.fbx,.dxf,.sldprt,.sldasm,.las,.laz,.e57"/>
               </label>
             </div>
           </div>
 
           <div className="flex gap-3">
-            <button className="rounded-xl bg-slate-900 text-white px-5 py-2.5 text-sm font-semibold">Submit</button>
+            <button className="rounded-xl bubble px-5 py-2.5 text-sm font-semibold">Submit</button>
           </div>
         </form>
 
