@@ -8,42 +8,51 @@
   --paper:#0f172a;
 }
 
-/* Site background: lighter blue gradient + faint tech pattern */
+/* Site background: vertical gradient + faint triangular tech pattern */
 .site-bg{
   min-height:100%;
-  background:
-    radial-gradient(1200px 700px at 25% -10%, rgba(72,112,196,.22), transparent 60%),
-    radial-gradient(1400px 800px at 110% 10%, rgba(36,99,235,.12), transparent 70%),
-    linear-gradient(180deg, #1a2a44, #0e1a30 55%, #0b1528 100%);
-  background-attachment: fixed;
-  color: var(--ink);
-  position: relative;
-}
-.site-bg::before{
-  content:"";
-  position: fixed; inset:0; pointer-events:none;
+  /* Top layers = subtle pattern; bottom = vertical gradient */
   background-image:
-    linear-gradient(60deg, rgba(255,255,255,.035) 1px, transparent 1px),
-    linear-gradient(-60deg, rgba(255,255,255,.035) 1px, transparent 1px),
-    linear-gradient(0deg, rgba(255,255,255,.02) 1px, transparent 1px);
-  background-size: 26px 26px, 26px 26px, 52px 52px;
-  mix-blend-mode: overlay;
+    /* pattern (very faint) */
+    linear-gradient(60deg, rgba(255,255,255,.030) 1px, transparent 1px),
+    linear-gradient(-60deg, rgba(255,255,255,.030) 1px, transparent 1px),
+    linear-gradient(0deg, rgba(255,255,255,.018) 1px, transparent 1px),
+    /* soft edge glows */
+    radial-gradient(900px 520px at 25% -10%, rgba(72,112,196,.20), transparent 60%),
+    radial-gradient(1100px 640px at 110% 10%, rgba(36,99,235,.12), transparent 70%),
+    /* base VERTICAL gradient */
+    linear-gradient(180deg, #1b2c4e 0%, #12233f 55%, #0b1528 100%);
+  background-size:
+    26px 26px,
+    26px 26px,
+    52px 52px,
+    auto, auto, auto;
+  background-attachment: fixed, fixed, fixed, fixed, fixed, fixed;
+  background-blend-mode: overlay, overlay, normal, normal, normal, normal;
+  color: var(--ink);
 }
 
-/* Gradient header (slightly darker) */
+/* Header: darker vertical gradient (no white) */
 .bg-header{
-  background-image: linear-gradient(180deg, #14233d, #0e1a30);
+  background-image: linear-gradient(180deg, #162a4a 0%, #0e1a30 100%);
 }
 
-/* “Bubble” pills with reversed gradient */
+/* “Bubble” pills with reversed VERTICAL gradient (softer, dimensional) */
 .bubble{
-  background-image: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.03));
-  border: 1px solid rgba(255,255,255,.18);
+  background-image: linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.06));
+  border: 1px solid rgba(255,255,255,.22);
   color:#f1f5f9;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.25),
+    0 1px 6px rgba(0,0,0,.08);
 }
-.bubble-active{ box-shadow: inset 0 0 0 1px rgba(255,255,255,.35); }
+.bubble-active{
+  box-shadow:
+    inset 0 0 0 1.5px rgba(255,255,255,.45),
+    0 1px 8px rgba(255,255,255,.05);
+}
 
-/* Panels */
+/* Panels (section wrappers) with vertical sheen */
 .panel{
   background-image: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
   border: 1px solid rgba(255,255,255,.18);
@@ -54,21 +63,29 @@
 }
 
 /* Cards */
-.card{ background: rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.20); color:#e5e7eb; }
+.card{
+  background: rgba(255,255,255,.05);
+  border:1px solid rgba(255,255,255,.20);
+  color:#e5e7eb;
+}
 .card h3{ color:#fff; }
 .card p{ color:#cbd5e1; }
 
-/* Softer inputs for design + shop */
+/* Softer inputs (Design + Shop) */
 .input-soft{
-  background-image: linear-gradient(180deg, rgba(255,255,255,.86), rgba(255,255,255,.78));
+  background-image: linear-gradient(180deg, rgba(255,255,255,.82), rgba(255,255,255,.74));
   border: 1px solid rgba(0,0,0,.12);
   color:#0f172a;
-  box-shadow: inset 0 1px 0 rgba(255,255,255,.35), 0 1px 1px rgba(0,0,0,.05);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.35),
+    0 1px 1px rgba(0,0,0,.05);
 }
 .input-soft:focus{
   outline: none;
   border-color: rgba(59,130,246,.45);
-  box-shadow: 0 0 0 3px rgba(59,130,246,.25), inset 0 1px 0 rgba(255,255,255,.35);
+  box-shadow:
+    0 0 0 3px rgba(59,130,246,.25),
+    inset 0 1px 0 rgba(255,255,255,.35);
 }
 
 /* Utility */
