@@ -1,0 +1,15 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root{
+  --ink:#e5e7eb;
+  --paper:#141922;
+  --line:#e5e7eb;
+}
+
+html,body{height:100%}
+.hidden-soft{display:none !important;}
+.card{ background: rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.20); color:#e5e7eb; }
+.card h3{ color:#fff; }
+.card p{ color:#cbd5e1; }

@@ -1,0 +1,20 @@
+[build]
+  command = "npm run build"
+  publish = ".next"
+
+[functions]
+  directory = "netlify/functions"
+
+# Friendly API paths:
+[[redirects]]
+  from = "/api/paypal/create"
+  to   = "/.netlify/functions/paypal-create-order"
+  status = 200
+
+[[redirects]]
+  from = "/api/paypal/capture"
+  to   = "/.netlify/functions/paypal-capture-order"
+  status = 200
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
