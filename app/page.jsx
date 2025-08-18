@@ -4,10 +4,10 @@ import Link from "next/link";
 import { useState } from "react";
 
 const imgs = [
-  { src: "/assets/img/DisplayCasting_Home.png", alt: "Casting pattern" },
-  { src: "/assets/img/DisplayConnector_Home.png", alt: "Connector bracket" },
-  { src: "/assets/img/DisplayParts_Home.png", alt: "Assorted parts" },
-  { src: "/assets/img/DisplayThermoForm_Home.png", alt: "Thermoform pattern" }
+  { src: "/assets/DisplayCasting_Home.png", alt: "Casting pattern" },
+  { src: "/assets/DisplayConnector_Home.png", alt: "Connector bracket" },
+  { src: "/assets/DisplayParts_Home.png", alt: "Assorted parts" },
+  { src: "/assets/DisplayThermoForm_Home.png", alt: "Thermoform pattern" }
 ];
 
 export default function HomePage() {
@@ -73,6 +73,9 @@ export default function HomePage() {
 
       {/* WHAT WE DO — Row 1 */}
       <section className="space-y-4">
+        <h2 className="rounded-full bubble px-3 py-1 text-sm font-semibold w-fit">
+          What we do
+        </h2>
         <div className="rounded-3xl panel p-3">
           <div className="grid md:grid-cols-3 gap-3">
             <article className="card rounded-2xl p-5">
@@ -125,7 +128,7 @@ export default function HomePage() {
         <div className="grid md:grid-cols-2">
           <figure className="p-4 md:p-6 bg-white">
             <Image
-              src="/assets/img/WindowSlide_Drawing.png"
+              src="/assets/WindowSlide_Drawing.png"
               alt="Technical drawing – window attachment"
               width={1200}
               height={800}

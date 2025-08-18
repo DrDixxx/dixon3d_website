@@ -24,7 +24,7 @@ export default function Nav() {
         <Link href="/" className="flex items-center gap-3">
           <Image
             alt="Dixon 3D logo"
-            src="/assets/img/D3D_Logo.png"
+            src="/assets/D3D_Logo.png"
             width={48}
             height={48}
             className="h-12 w-12 rounded-md ring-1 ring-white/20 bg-[#e7ebf3] p-1.5 object-contain"
