@@ -2,14 +2,65 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Palette */
 :root{
   --ink:#e5e7eb;
-  --paper:#141922;
-  --line:#e5e7eb;
+  --paper:#0f172a;         /* base blue */
 }
 
-html,body{height:100%}
-.hidden-soft{display:none !important;}
+/* Site background: lighter blue gradient + faint tech pattern */
+.site-bg{
+  min-height:100%;
+  background:
+    radial-gradient(1200px 700px at 25% -10%, rgba(72,112,196,.22), transparent 60%),
+    radial-gradient(1400px 800px at 110% 10%, rgba(36,99,235,.12), transparent 70%),
+    linear-gradient(180deg, #1a2a44, #0e1a30 55%, #0b1528 100%);
+  background-attachment: fixed;
+  color: var(--ink);
+  position: relative;
+}
+.site-bg::before{
+  /* subtle “infill” grid (triangular) */
+  content:"";
+  position: fixed; inset:0;
+  pointer-events:none;
+  background-image:
+    linear-gradient(60deg, rgba(255,255,255,.035) 1px, transparent 1px),
+    linear-gradient(-60deg, rgba(255,255,255,.035) 1px, transparent 1px),
+    linear-gradient(0deg, rgba(255,255,255,.02) 1px, transparent 1px);
+  background-size: 26px 26px, 26px 26px, 52px 52px;
+  mix-blend-mode: overlay;
+}
+
+/* Gradient header (slightly darker) */
+.bg-header{
+  background-image: linear-gradient(180deg, #14233d, #0e1a30);
+}
+
+/* “Bubble” pills with reversed gradient */
+.bubble{
+  background-image: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.03));
+  border: 1px solid rgba(255,255,255,.18);
+  color:#f1f5f9;
+}
+.bubble-active{
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.35);
+}
+
+/* Light/Reverse panels used on Home sections */
+.panel{
+  background-image: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
+  border: 1px solid rgba(255,255,255,.18);
+}
+.panel-inverse{
+  background-image: linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,.07));
+  border: 1px solid rgba(255,255,255,.22);
+}
+
+/* Cards (kept from before) */
 .card{ background: rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.20); color:#e5e7eb; }
 .card h3{ color:#fff; }
 .card p{ color:#cbd5e1; }
+
+/* Utility from earlier */
+.hidden-soft{display:none !important;}

@@ -10,7 +10,7 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className="antialiased bg-[var(--paper)] text-[var(--ink)]">
+      <body className="antialiased site-bg text-[var(--ink)]">
         <Nav />
         <main className="min-h-[calc(100vh-200px)]">{children}</main>
         <Footer />
