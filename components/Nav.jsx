@@ -28,9 +28,9 @@ export default function Nav() {
           <Image
             alt="Dixon 3D logo"
             src="/assets/img/D3D_Logo.png"
-            width={48}
-            height={48}
-            className="h-12 w-12 rounded-md ring-1 ring-white/20 bg-[#e7ebf3] p-1.5 object-contain"
+            width={60}
+            height={60}
+            className="h-[60px] w-[60px] object-contain"
           />
           <div className="text-base font-semibold">Dixon 3D</div>
         </Link>
