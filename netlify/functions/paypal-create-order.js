@@ -1,11 +1,11 @@
-const BASE_URL = "https://api-m.sandbox.paypal.com";
-const CLIENT_ID = process.env.PAYPAL_ID;
-const CLIENT_SECRET = process.env.PAYPAL_SECRET;
+const base = "https://api-m.sandbox.paypal.com"; // sandbox for testing
+const id = process.env.NEXT_PUBLIC_PAYPAL_ID;     // client id is public by design
+const secret = process.env.PAYPAL_SECRET;         // keep this private
 
 async function getAccessToken() {
-  if (!CLIENT_ID || !CLIENT_SECRET) throw new Error("Missing PayPal env vars (PAYPAL_ID / PAYPAL_SECRET)");
-  const creds = Buffer.from(`${CLIENT_ID}:${CLIENT_SECRET}`).toString("base64");
-  const res = await fetch(`${BASE_URL}/v1/oauth2/token`, {
+  if (!id || !secret) throw new Error("Missing PayPal env vars (NEXT_PUBLIC_PAYPAL_ID / PAYPAL_SECRET)");
+  const creds = Buffer.from(`${id}:${secret}`).toString("base64");
+  const res = await fetch(`${base}/v1/oauth2/token`, {
     method: "POST",
     headers: {
       Authorization: `Basic ${creds}`,
@@ -14,7 +14,7 @@ async function getAccessToken() {
     body: "grant_type=client_credentials"
   });
   const text = await res.text();
-  if (!res.ok) throw new Error(`PayPal auth failed (${res.status}): ${text}`);
+  if (!res.ok) throw new Error(`PayPal auth failed (${res.status}): ${text || res.statusText}`);
   return JSON.parse(text).access_token;
 }
 
@@ -23,7 +23,7 @@ exports.handler = async (event) => {
     return {
       statusCode: 200,
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ envPresent: !!CLIENT_ID && !!CLIENT_SECRET, mode: "sandbox" })
+      body: JSON.stringify({ envPresent: !!id && !!secret, mode: "sandbox" })
     };
   }
   try {
@@ -43,7 +43,7 @@ exports.handler = async (event) => {
       }
     };
 
-    const res = await fetch(`${BASE_URL}/v2/checkout/orders`, {
+    const res = await fetch(`${base}/v2/checkout/orders`, {
       method: "POST",
       headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
       body: JSON.stringify(payload)
