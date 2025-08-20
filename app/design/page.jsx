@@ -46,7 +46,7 @@ export default function DesignPage() {
         <h3 className="text-xl font-semibold">Design & Quote</h3>
         <p className="text-slate-200 mt-2">Tell us what you need. Attach CAD/mesh files if you have them.</p>
 
-        <form id="quote-form" className="mt-6 space-y-6" onSubmit={(e) => {
+        <form id="quote-form" className="mt-6 space-y-6" onSubmit={async (e) => {
           e.preventDefault();
           const data = Object.fromEntries(new FormData(e.currentTarget).entries());
           const files = (e.currentTarget.querySelector("#file-input")?.files || []);
@@ -56,6 +56,15 @@ export default function DesignPage() {
             files: Array.from(files).map(f => f.name),
             time: new Date().toISOString()
           };
+          try {
+            await fetch("/api/design-request", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(payload)
+            });
+          } catch (err) {
+            console.error("Failed to send design request", err);
+          }
           const prev = JSON.parse(localStorage.getItem("dixon3d_requests") || "[]");
           localStorage.setItem("dixon3d_requests", JSON.stringify([payload, ...prev]));
           e.currentTarget.reset();
