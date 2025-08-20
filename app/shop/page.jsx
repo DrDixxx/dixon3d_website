@@ -40,6 +40,8 @@ export default function ShopPage() {
       if (container) container.innerHTML = "";
       window.paypal
         .Buttons({
+          style: { layout: "horizontal", height: 40, tagline: false },
+          fundingSource: window.paypal.FUNDING.PAYPAL,
           createOrder: async () => {
             const res = await fetch("/api/paypal/create", {
               method: "POST",
@@ -47,6 +49,10 @@ export default function ShopPage() {
               body: JSON.stringify({ amount: subtotal.toFixed(2), currency: "USD" })
             });
             const data = await res.json();
+            if (!res.ok || !data.id) {
+              alert(data.error || "Payment setup error");
+              throw new Error("PayPal order creation failed");
+            }
             return data.id;
           },
           onApprove: async (data) => {
@@ -60,6 +66,7 @@ export default function ShopPage() {
               window.location.href = "/thank-you";
             } else {
               alert(capture?.error || "Payment error");
+              throw new Error("PayPal capture failed");
             }
           }
         })
@@ -71,7 +78,7 @@ export default function ShopPage() {
     }
     const script = document.createElement("script");
     script.id = scriptId;
-    script.src = `https://www.paypal.com/sdk/js?client-id=${paypalClientId}`;
+    script.src = `https://www.paypal.com/sdk/js?client-id=${paypalClientId}&disable-funding=paylater`;
     script.onload = renderButtons;
     document.body.appendChild(script);
     return () => {
@@ -98,8 +105,9 @@ export default function ShopPage() {
         body: JSON.stringify({ amount: subtotal.toFixed(2), currency: "USD" })
       });
       const data = await res.json();
-      if (data.approve) {
-        window.location.href = data.approve;
+      if (res.ok && data.approve) {
+        const approveUrl = data.approve + (data.approve.includes("?") ? "&" : "?") + "disable-funding=paylater";
+        window.location.href = approveUrl;
       } else {
         alert(data.error || "Payment error");
       }
