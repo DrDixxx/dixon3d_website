@@ -1,56 +1,64 @@
-const base = "https://api-m.sandbox.paypal.com";
-const id = process.env.NEXT_PUBLIC_PAYPAL_ID;
-const secret = process.env.PAYPAL_SECRET;
-
-async function getAccessToken() {
-  if (!id || !secret) throw new Error("Missing PayPal env vars (NEXT_PUBLIC_PAYPAL_ID / PAYPAL_SECRET)");
-  const creds = Buffer.from(`${id}:${secret}`).toString("base64");
-  const res = await fetch(`${base}/v1/oauth2/token`, {
-    method: "POST",
-    headers: {
-      Authorization: `Basic ${creds}`,
-      "Content-Type": "application/x-www-form-urlencoded"
-    },
-    body: "grant_type=client_credentials"
-  });
-  const text = await res.text();
-  if (!res.ok) throw new Error(`PayPal auth failed (${res.status}): ${text || res.statusText}`);
-  return JSON.parse(text).access_token;
-}
+const { base, getAccessToken, round2, json } = require("./paypal-utils");
 
 exports.handler = async (event) => {
   try {
-    const qs = event.queryStringParameters || {};
-    const orderId = qs.token || qs.order_id;
-    if (!orderId) {
-      return {
-        statusCode: 400,
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ error: "Missing order id" })
-      };
-    }
+    const orderId = event.queryStringParameters?.token || event.queryStringParameters?.order_id;
+    if (!orderId) return json(400, { error: "Missing order id" });
 
     const token = await getAccessToken();
-    const res = await fetch(`${base}/v2/checkout/orders/${orderId}/capture`, {
+
+    let res = await fetch(`${base}/v2/checkout/orders/${orderId}`, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    let order = await res.json();
+    if (!res.ok) return json(res.status, order);
+
+    const pu = order.purchase_units?.[0] || {};
+    const item_total = parseFloat(pu.amount?.breakdown?.item_total?.value || pu.amount?.value || "0");
+    let tax_total = 0;
+    const addr = pu.shipping?.address;
+    if (addr) {
+      const state = addr.admin_area_1;
+      const country = addr.country_code;
+      const rate = country === "US" && state === "CO" ? 0.029 : 0;
+      tax_total = round2(item_total * rate);
+      const path = pu.reference_id
+        ? `/purchase_units/@reference_id=='${pu.reference_id}'/amount`
+        : "/purchase_units/0/amount";
+      const value = (item_total + tax_total).toFixed(2);
+      const patchBody = [
+        {
+          op: "replace",
+          path,
+          value: {
+            currency_code: "USD",
+            value,
+            breakdown: {
+              item_total: { currency_code: "USD", value: item_total.toFixed(2) },
+              tax_total: { currency_code: "USD", value: tax_total.toFixed(2) }
+            }
+          }
+        }
+      ];
+      res = await fetch(`${base}/v2/checkout/orders/${orderId}`, {
+        method: "PATCH",
+        headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
+        body: JSON.stringify(patchBody)
+      });
+      if (!res.ok) {
+        const txt = await res.text();
+        throw new Error(`PayPal patch failed (${res.status}): ${txt}`);
+      }
+    }
+
+    res = await fetch(`${base}/v2/checkout/orders/${orderId}/capture`, {
       method: "POST",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json"
-      },
+      headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
       body: "{}"
     });
     const capture = await res.json();
-    return {
-      statusCode: res.ok ? 200 : 500,
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(capture)
-    };
+    return json(res.ok ? 200 : 500, capture);
   } catch (e) {
-    return {
-      statusCode: 500,
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ error: String(e) })
-    };
+    return json(500, { error: String(e) });
   }
 };
-
