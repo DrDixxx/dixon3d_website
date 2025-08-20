@@ -1,14 +1,22 @@
 import { NextResponse } from "next/server";
 
-const BASE_URL = "https://api-m.sandbox.paypal.com";
+// Determine mode before making any requests
+const mode = process.env.PAYPAL_ENV === "live" ? "live" : "sandbox";
+const BASE_URL =
+  mode === "live"
+    ? "https://api-m.paypal.com"
+    : "https://api-m.sandbox.paypal.com";
 
 async function getAccessToken() {
+  // Select the correct credentials for the current mode
   const id =
-    process.env.PAYPAL_SANDBOX_CLIENT_ID || process.env.PAYPAL_CLIENT_ID;
+    mode === "live"
+      ? process.env.PAYPAL_CLIENT_ID
+      : process.env.PAYPAL_SANDBOX_CLIENT_ID;
   const secret =
-    process.env.PAYPAL_SANDBOX_CLIENT_SECRET ||
-    process.env.PAYPAL_CLIENT_SECRET ||
-    process.env.PAYPAL_SECRET;
+    mode === "live"
+      ? process.env.PAYPAL_SECRET
+      : process.env.PAYPAL_SANDBOX_CLIENT_SECRET;
   if (!id || !secret) {
     throw new Error("Missing PayPal credentials");
   }
