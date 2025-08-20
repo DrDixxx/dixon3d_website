@@ -56,7 +56,7 @@ export default function DesignPage() {
           const prev = JSON.parse(localStorage.getItem("dixon3d_requests") || "[]");
           localStorage.setItem("dixon3d_requests", JSON.stringify([payload, ...prev]));
           e.currentTarget.reset();
-          document.getElementById("thanks").classList.remove("hidden-soft");
+          window.location.href = "/design/thank-you";
         }}>
           <div className="grid sm:grid-cols-2 gap-4">
             <label className="block">
@@ -109,11 +109,6 @@ export default function DesignPage() {
             <button className="rounded-xl bubble px-5 py-2.5 text-sm font-semibold">Submit</button>
           </div>
         </form>
-
-        <div id="thanks" className="hidden-soft max-w-2xl mx-auto text-center space-y-4 mt-6">
-          <h2 className="text-2xl font-bold">Thanks! 🎉</h2>
-          <p className="text-slate-200">Saved in your browser. Hook up email/API later.</p>
-        </div>
       </section>
     </div>
   );
