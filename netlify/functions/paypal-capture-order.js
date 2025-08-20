@@ -1,25 +1,11 @@
-// Allow switching between sandbox and live environments via PAYPAL_ENV
-const mode = process.env.PAYPAL_ENV === "live" ? "live" : "sandbox";
-const BASE_URL =
-  mode === "live"
-    ? "https://api-m.paypal.com"
-    : "https://api-m.sandbox.paypal.com";
+const base = "https://api-m.sandbox.paypal.com";
+const id = process.env.NEXT_PUBLIC_PAYPAL_ID;
+const secret = process.env.PAYPAL_SECRET;
 
 async function getAccessToken() {
-  // Pick credentials based on mode
-  const id =
-    mode === "live"
-      ? process.env.PAYPAL_CLIENT_ID
-      : process.env.PAYPAL_SANDBOX_CLIENT_ID;
-  const secret =
-    mode === "live"
-      ? process.env.PAYPAL_SECRET
-      : process.env.PAYPAL_SANDBOX_CLIENT_SECRET;
-  if (!id || !secret) {
-    throw new Error("Missing PayPal credentials");
-  }
+  if (!id || !secret) throw new Error("Missing PayPal env vars (NEXT_PUBLIC_PAYPAL_ID / PAYPAL_SECRET)");
   const creds = Buffer.from(`${id}:${secret}`).toString("base64");
-  const res = await fetch(`${BASE_URL}/v1/oauth2/token`, {
+  const res = await fetch(`${base}/v1/oauth2/token`, {
     method: "POST",
     headers: {
       Authorization: `Basic ${creds}`,
@@ -27,9 +13,9 @@ async function getAccessToken() {
     },
     body: "grant_type=client_credentials"
   });
-  if (!res.ok) throw new Error("PayPal auth failed");
-  const json = await res.json();
-  return json.access_token;
+  const text = await res.text();
+  if (!res.ok) throw new Error(`PayPal auth failed (${res.status}): ${text || res.statusText}`);
+  return JSON.parse(text).access_token;
 }
 
 exports.handler = async (event) => {
@@ -37,16 +23,19 @@ exports.handler = async (event) => {
     const qs = event.queryStringParameters || {};
     const orderId = qs.token || qs.order_id;
     if (!orderId) {
-      return { statusCode: 400, body: "Missing order id" };
+      return {
+        statusCode: 400,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ error: "Missing order id" })
+      };
     }
 
     const token = await getAccessToken();
-    const res = await fetch(
-      `${BASE_URL}/v2/checkout/orders/${orderId}/capture`,
-      { method: "POST", headers: { Authorization: `Bearer ${token}` } }
-    );
+    const res = await fetch(`${base}/v2/checkout/orders/${orderId}/capture`, {
+      method: "POST",
+      headers: { Authorization: `Bearer ${token}` }
+    });
     const capture = await res.json();
-
     return {
       statusCode: res.ok ? 200 : 500,
       headers: { "Content-Type": "application/json" },
@@ -60,3 +49,4 @@ exports.handler = async (event) => {
     };
   }
 };
+

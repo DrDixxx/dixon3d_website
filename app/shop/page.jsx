@@ -17,11 +17,7 @@ export default function ShopPage() {
   const [cart, setCart] = useState([]);
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("All");
-  const paypalEnv = process.env.PAYPAL_ENV === "live" ? "live" : "sandbox";
-  const paypalClientId =
-    paypalEnv === "live"
-      ? process.env.PAYPAL_CLIENT_ID
-      : process.env.PAYPAL_SANDBOX_CLIENT_ID;
+  const paypalClientId = process.env.NEXT_PUBLIC_PAYPAL_ID; // set via env, sandbox for testing
 
   useEffect(() => { try { setCart(JSON.parse(localStorage.getItem(CART_KEY) || "[]")); } catch {} }, []);
   useEffect(() => { localStorage.setItem(CART_KEY, JSON.stringify(cart)); }, [cart]);
