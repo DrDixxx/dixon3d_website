@@ -1,26 +1,19 @@
 import { NextResponse } from "next/server";
 
-const base = (env) =>
-  env === "live" ? "https://api-m.paypal.com" : "https://api-m.sandbox.paypal.com";
+const BASE_URL = "https://api-m.sandbox.paypal.com";
 
 async function getAccessToken() {
-  const env = process.env.PAYPAL_ENV;
   const id =
-    env === "live"
-      ? process.env.PAYPAL_CLIENT_ID
-      : process.env.PAYPAL_SANDBOX_CLIENT_ID || process.env.PAYPAL_CLIENT_ID;
+    process.env.PAYPAL_SANDBOX_CLIENT_ID || process.env.PAYPAL_CLIENT_ID;
   const secret =
-    env === "live"
-      ? process.env.PAYPAL_CLIENT_SECRET || process.env.PAYPAL_SECRET
-      :
-          process.env.PAYPAL_SANDBOX_CLIENT_SECRET ||
-          process.env.PAYPAL_CLIENT_SECRET ||
-          process.env.PAYPAL_SECRET;
+    process.env.PAYPAL_SANDBOX_CLIENT_SECRET ||
+    process.env.PAYPAL_CLIENT_SECRET ||
+    process.env.PAYPAL_SECRET;
   if (!id || !secret) {
     throw new Error("Missing PayPal credentials");
   }
   const creds = Buffer.from(`${id}:${secret}`).toString("base64");
-  const res = await fetch(`${base(process.env.PAYPAL_ENV)}/v1/oauth2/token`, {
+  const res = await fetch(`${BASE_URL}/v1/oauth2/token`, {
     method: "POST",
     headers: {
       Authorization: `Basic ${creds}`,
@@ -60,7 +53,7 @@ export async function POST(req) {
       },
     };
 
-    const res = await fetch(`${base(process.env.PAYPAL_ENV)}/v2/checkout/orders`, {
+    const res = await fetch(`${BASE_URL}/v2/checkout/orders`, {
       method: "POST",
       headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
       body: JSON.stringify(payload),
