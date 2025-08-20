@@ -16,5 +16,10 @@
   to   = "/.netlify/functions/paypal-capture-order"
   status = 200
 
+[[redirects]]
+  from = "/api/design-request"
+  to   = "/.netlify/functions/design-request"
+  status = 200
+
 [[plugins]]
   package = "@netlify/plugin-nextjs"
