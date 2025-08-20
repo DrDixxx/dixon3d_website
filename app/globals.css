@@ -88,5 +88,22 @@
     inset 0 1px 0 rgba(255,255,255,.35);
 }
 
+/* Dark theme inputs (Shop qty boxes etc) */
+.input-dark{
+  background-image: linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.06));
+  border: 1px solid rgba(255,255,255,.22);
+  color:#f1f5f9;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.08),
+    0 1px 1px rgba(0,0,0,.15);
+}
+.input-dark:focus{
+  outline: none;
+  border-color: rgba(59,130,246,.45);
+  box-shadow:
+    0 0 0 3px rgba(59,130,246,.30),
+    inset 0 1px 0 rgba(255,255,255,.08);
+}
+
 /* Utility */
 .hidden-soft{display:none !important;}
