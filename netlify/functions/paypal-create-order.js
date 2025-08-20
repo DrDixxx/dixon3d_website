@@ -8,6 +8,7 @@ exports.handler = async (event) => {
   try {
     const body = JSON.parse(event.body || "{}");
     const { currency = "USD", items = [] } = body;
+    const invoiceId = `INV-${Date.now()}`;
     const token = await getAccessToken();
     const site = process.env.URL || process.env.DEPLOY_URL || "http://localhost:3000";
 
@@ -36,6 +37,7 @@ exports.handler = async (event) => {
       purchase_units: [
         {
           reference_id: "default",
+          invoice_id: invoiceId,
           items: lineItems,
           amount: {
             currency_code: currency,
@@ -59,9 +61,9 @@ exports.handler = async (event) => {
     });
     const order = await res.json();
     const approve = (order.links || []).find(l => l.rel === "approve")?.href;
-    const invoiceId = order.purchase_units?.[0]?.invoice_id;
+    const returnedInvoiceId = order.purchase_units?.[0]?.invoice_id || invoiceId;
 
-    return json(res.ok ? 200 : 500, approve ? { id: order.id, approve, invoiceId } : { error: order });
+    return json(res.ok ? 200 : 500, approve ? { id: order.id, approve, invoiceId: returnedInvoiceId } : { error: order });
   } catch (e) {
     return json(500, { error: String(e) });
   }
