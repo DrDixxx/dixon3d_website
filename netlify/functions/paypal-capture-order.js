@@ -33,7 +33,11 @@ exports.handler = async (event) => {
     const token = await getAccessToken();
     const res = await fetch(`${base}/v2/checkout/orders/${orderId}/capture`, {
       method: "POST",
-      headers: { Authorization: `Bearer ${token}` }
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json"
+      },
+      body: "{}"
     });
     const capture = await res.json();
     return {
