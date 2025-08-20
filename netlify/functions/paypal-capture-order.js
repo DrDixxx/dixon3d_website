@@ -6,11 +6,17 @@ async function getAccessToken() {
   const id =
     env === "live"
       ? process.env.PAYPAL_CLIENT_ID
-      : process.env.PAYPAL_SANDBOX_CLIENT_ID;
+      : process.env.PAYPAL_SANDBOX_CLIENT_ID || process.env.PAYPAL_CLIENT_ID;
   const secret =
     env === "live"
-      ? process.env.PAYPAL_SECRET
-      : process.env.PAYPAL_SANDBOX_CLIENT_SECRET;
+      ? process.env.PAYPAL_CLIENT_SECRET || process.env.PAYPAL_SECRET
+      :
+          process.env.PAYPAL_SANDBOX_CLIENT_SECRET ||
+          process.env.PAYPAL_CLIENT_SECRET ||
+          process.env.PAYPAL_SECRET;
+  if (!id || !secret) {
+    throw new Error("Missing PayPal credentials");
+  }
   const creds = Buffer.from(`${id}:${secret}`).toString("base64");
   const res = await fetch(`${base(process.env.PAYPAL_ENV)}/v1/oauth2/token`, {
     method: "POST",
