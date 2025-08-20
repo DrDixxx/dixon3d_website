@@ -57,18 +57,20 @@ export default function DesignPage() {
             time: new Date().toISOString()
           };
           try {
-            await fetch("/api/design-request", {
+            const res = await fetch("/api/design-request", {
               method: "POST",
               headers: { "Content-Type": "application/json" },
               body: JSON.stringify(payload)
             });
+            if (!res.ok) throw new Error("Failed to send design request");
+            const prev = JSON.parse(localStorage.getItem("dixon3d_requests") || "[]");
+            localStorage.setItem("dixon3d_requests", JSON.stringify([payload, ...prev]));
+            e.currentTarget.reset();
+            window.location.href = "/design/thank-you";
           } catch (err) {
             console.error("Failed to send design request", err);
+            alert("Failed to send design request. Please try again later.");
           }
-          const prev = JSON.parse(localStorage.getItem("dixon3d_requests") || "[]");
-          localStorage.setItem("dixon3d_requests", JSON.stringify([payload, ...prev]));
-          e.currentTarget.reset();
-          window.location.href = "/design/thank-you";
         }}>
           <div className="grid sm:grid-cols-2 gap-4">
             <label className="block">

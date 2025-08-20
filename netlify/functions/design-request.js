@@ -34,6 +34,7 @@ exports.handler = async (event) => {
     await transporter.sendMail({
       from: process.env.SMTP_FROM || process.env.SMTP_USER,
       to: "ThomasDixon@dixon3d.com",
+      replyTo: email || undefined,
       subject: "New Design Request",
       text,
     });
