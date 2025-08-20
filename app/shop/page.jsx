@@ -17,6 +17,11 @@ export default function ShopPage() {
   const [cart, setCart] = useState([]);
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("All");
+  const paypalEnv = process.env.PAYPAL_ENV === "live" ? "live" : "sandbox";
+  const paypalClientId =
+    paypalEnv === "live"
+      ? process.env.PAYPAL_CLIENT_ID
+      : process.env.PAYPAL_SANDBOX_CLIENT_ID;
 
   useEffect(() => { try { setCart(JSON.parse(localStorage.getItem(CART_KEY) || "[]")); } catch {} }, []);
   useEffect(() => { localStorage.setItem(CART_KEY, JSON.stringify(cart)); }, [cart]);
@@ -27,6 +32,56 @@ export default function ShopPage() {
     (p.name + " " + p.material).toLowerCase().includes(search.toLowerCase())
   );
   const subtotal = cart.reduce((s, p) => s + p.price * p.qty, 0);
+
+  // Load PayPal script and render buttons with the appropriate client ID
+  useEffect(() => {
+    if (!paypalClientId) return;
+    const scriptId = "paypal-js";
+    const existing = document.getElementById(scriptId);
+    const renderButtons = () => {
+      if (!window.paypal) return;
+      const container = document.getElementById("paypal-buttons");
+      if (container) container.innerHTML = "";
+      window.paypal
+        .Buttons({
+          createOrder: async () => {
+            const res = await fetch("/api/paypal/create", {
+              method: "POST",
+              headers: { "content-type": "application/json" },
+              body: JSON.stringify({ amount: subtotal.toFixed(2), currency: "USD" })
+            });
+            const data = await res.json();
+            return data.id;
+          },
+          onApprove: async (data) => {
+            const res = await fetch(`/api/paypal/capture?token=${data.orderID}`);
+            const capture = await res.json();
+            const ok =
+              capture?.status === "COMPLETED" ||
+              capture?.purchase_units?.[0]?.payments?.captures?.[0]?.status === "COMPLETED";
+            if (ok) {
+              localStorage.setItem(CART_KEY, "[]");
+              window.location.href = "/thank-you";
+            } else {
+              alert(capture?.error || "Payment error");
+            }
+          }
+        })
+        .render("#paypal-buttons");
+    };
+    if (existing) {
+      renderButtons();
+      return;
+    }
+    const script = document.createElement("script");
+    script.id = scriptId;
+    script.src = `https://www.paypal.com/sdk/js?client-id=${paypalClientId}`;
+    script.onload = renderButtons;
+    document.body.appendChild(script);
+    return () => {
+      script.remove();
+    };
+  }, [paypalClientId, subtotal]);
 
   function add(id, qty) {
     const p = PRODUCTS.find(x => x.id === id);
@@ -39,17 +94,6 @@ export default function ShopPage() {
   }
   function updateQty(key, qty) { setCart(old => old.map(i => i.key === key ? { ...i, qty: Math.max(1, qty) } : i)); }
   function removeItem(key) { setCart(old => old.filter(i => i.key !== key)); }
-
-  async function checkout() {
-    const res = await fetch("/api/paypal/create", {
-      method: "POST",
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify({ amount: subtotal.toFixed(2), currency: "USD" })
-    });
-    const data = await res.json();
-    if (data?.approve) window.location.href = data.approve;
-    else alert(data?.error || "Could not start PayPal checkout.");
-  }
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-24 pt-10">
@@ -114,10 +158,7 @@ export default function ShopPage() {
             </div>
           ))}
         </div>
-        <button onClick={checkout}
-                className="mt-4 w-full rounded-xl bubble px-5 py-2.5 text-sm font-semibold hover:brightness-110">
-          Checkout with PayPal
-        </button>
+        <div id="paypal-buttons" className="mt-4" />
       </section>
     </div>
   );
