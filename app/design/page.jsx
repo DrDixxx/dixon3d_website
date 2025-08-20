@@ -4,6 +4,34 @@ import INV from "../../lib/inventory.json";
 const { MATERIALS, COLORS } = INV;
 
 export default function DesignPage() {
+  async function onSubmit(e){
+    e.preventDefault();
+    const form = e.currentTarget;
+    const data = Object.fromEntries(new FormData(form).entries());
+
+    try {
+      const res  = await fetch('/api/design-request', {
+        method:'POST',
+        headers:{'content-type':'application/json'},
+        body: JSON.stringify(data)
+      });
+      const text = await res.text();
+      let json; try { json = JSON.parse(text); } catch {}
+      console.log('design-request →', res.status, json || text);
+
+      if (res.ok && json?.ok) {
+        alert(`Design request sent! Ref #${json.traceId || 'n/a'}`);
+        form.reset();
+        return;
+      }
+      const code = json?.code || `HTTP_${res.status}`;
+      const msg  = json?.message || text || 'Unknown error';
+      const ref  = json?.traceId || 'n/a';
+      alert(`Design request failed: ${code}\nRef #${ref}\n${msg}`);
+    } catch (err) {
+      alert(`Network error: ${err.message}`);
+    }
+  }
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pb-24 pt-10 space-y-10">
       <h2 className="text-2xl font-bold">Design Work</h2>
@@ -46,32 +74,7 @@ export default function DesignPage() {
         <h3 className="text-xl font-semibold">Design & Quote</h3>
         <p className="text-slate-200 mt-2">Tell us what you need. Attach CAD/mesh files if you have them.</p>
 
-        <form id="quote-form" className="mt-6 space-y-6" onSubmit={async (e) => {
-          e.preventDefault();
-          const data = Object.fromEntries(new FormData(e.currentTarget).entries());
-          const files = (e.currentTarget.querySelector("#file-input")?.files || []);
-          const payload = {
-            ...data,
-            quantity: Number(data.quantity || 1),
-            files: Array.from(files).map(f => f.name),
-            time: new Date().toISOString()
-          };
-          try {
-            const res = await fetch("/api/design-request", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify(payload)
-            });
-            if (!res.ok) throw new Error("Failed to send design request");
-            const prev = JSON.parse(localStorage.getItem("dixon3d_requests") || "[]");
-            localStorage.setItem("dixon3d_requests", JSON.stringify([payload, ...prev]));
-            e.currentTarget.reset();
-            window.location.href = "/design/thank-you";
-          } catch (err) {
-            console.error("Failed to send design request", err);
-            alert("Failed to send design request. Please try again later.");
-          }
-        }}>
+        <form id="quote-form" className="mt-6 space-y-6" onSubmit={onSubmit}>
           <div className="grid sm:grid-cols-2 gap-4">
             <label className="block">
               <div className="text-sm text-slate-300 mb-1">Name</div>
@@ -125,7 +128,7 @@ export default function DesignPage() {
           </div>
 
           <div className="flex gap-3">
-            <button className="rounded-xl bubble px-5 py-2.5 text-sm font-semibold">Submit</button>
+            <button type="submit" className="rounded-xl bubble px-5 py-2.5 text-sm font-semibold">Submit</button>
           </div>
         </form>
       </section>
