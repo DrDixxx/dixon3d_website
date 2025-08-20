@@ -1,44 +1,52 @@
-const base = "https://api-m.sandbox.paypal.com"; // sandbox for testing
-const id = process.env.NEXT_PUBLIC_PAYPAL_ID;     // client id is public by design
-const secret = process.env.PAYPAL_SECRET;         // keep this private
-
-async function getAccessToken() {
-  if (!id || !secret) throw new Error("Missing PayPal env vars (NEXT_PUBLIC_PAYPAL_ID / PAYPAL_SECRET)");
-  const creds = Buffer.from(`${id}:${secret}`).toString("base64");
-  const res = await fetch(`${base}/v1/oauth2/token`, {
-    method: "POST",
-    headers: {
-      Authorization: `Basic ${creds}`,
-      "Content-Type": "application/x-www-form-urlencoded"
-    },
-    body: "grant_type=client_credentials"
-  });
-  const text = await res.text();
-  if (!res.ok) throw new Error(`PayPal auth failed (${res.status}): ${text || res.statusText}`);
-  return JSON.parse(text).access_token;
-}
+const { base, getAccessToken, json, round2 } = require("./paypal-utils");
+const { MATERIALS, COLORS } = require("../../lib/inventory.json");
 
 exports.handler = async (event) => {
   if (event.httpMethod === "GET") {
-    return {
-      statusCode: 200,
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ envPresent: !!id && !!secret, mode: "sandbox" })
-    };
+    return json(200, { envPresent: true, mode: "sandbox" });
   }
   try {
     const body = JSON.parse(event.body || "{}");
-    const { amount = "10.00", currency = "USD" } = body;
+    const { currency = "USD", items = [] } = body;
     const token = await getAccessToken();
     const site = process.env.URL || process.env.DEPLOY_URL || "http://localhost:3000";
 
+    const lineItems = items.map(i => {
+      const material = MATERIALS.includes(i.material) ? i.material : MATERIALS[0];
+      const color = COLORS.includes(i.color) ? i.color : COLORS[0];
+      const finish = i.finish || "As-printed";
+      const scale = i.scale ?? 100;
+      const price = Number(i.price || 0);
+      const qty = Number(i.qty || 1);
+      const desc = `Color: ${color} • Material: ${material} • Fin: ${finish} • Scale: ${scale}%`.slice(0,127);
+      return {
+        name: i.name,
+        quantity: String(qty),
+        unit_amount: { currency_code: currency, value: price.toFixed(2) },
+        description: desc,
+        category: "PHYSICAL_GOODS"
+      };
+    });
+
+    const item_total = round2(lineItems.reduce((s, i) => s + Number(i.quantity) * Number(i.unit_amount.value), 0));
+
     const payload = {
       intent: "CAPTURE",
-      purchase_units: [{ amount: { currency_code: currency, value: String(amount) } }],
+      purchase_units: [
+        {
+          reference_id: "default",
+          items: lineItems,
+          amount: {
+            currency_code: currency,
+            value: item_total.toFixed(2),
+            breakdown: { item_total: { currency_code: currency, value: item_total.toFixed(2) } }
+          }
+        }
+      ],
       application_context: {
         return_url: `${site}/thank-you`,
         cancel_url: `${site}/shop`,
-        shipping_preference: "NO_SHIPPING",
+        shipping_preference: "GET_FROM_FILE",
         user_action: "PAY_NOW"
       }
     };
@@ -50,18 +58,10 @@ exports.handler = async (event) => {
     });
     const order = await res.json();
     const approve = (order.links || []).find(l => l.rel === "approve")?.href;
+    const invoiceId = order.purchase_units?.[0]?.invoice_id;
 
-    return {
-      statusCode: res.ok ? 200 : 500,
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(approve ? { id: order.id, approve } : { error: order })
-    };
+    return json(res.ok ? 200 : 500, approve ? { id: order.id, approve, invoiceId } : { error: order });
   } catch (e) {
-    return {
-      statusCode: 500,
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ error: String(e) })
-    };
+    return json(500, { error: String(e) });
   }
 };
-

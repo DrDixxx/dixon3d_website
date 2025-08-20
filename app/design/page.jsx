@@ -1,5 +1,8 @@
 "use client";
 
+import INV from "../../lib/inventory.json";
+const { MATERIALS, COLORS } = INV;
+
 export default function DesignPage() {
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pb-24 pt-10 space-y-10">
@@ -69,12 +72,17 @@ export default function DesignPage() {
             </label>
           </div>
 
-          <div className="grid sm:grid-cols-3 gap-4">
+          <div className="grid sm:grid-cols-4 gap-4">
             <label className="block">
               <div className="text-sm text-slate-300 mb-1">Material</div>
               <select name="material" className="w-full rounded-xl input-soft px-3 py-2 text-sm">
-                <option>PLA</option><option>PETG</option><option>ABS</option><option>ASA</option>
-                <option>Nylon</option><option>CF-Nylon</option><option>TPU 95A</option>
+                {MATERIALS.map(m => <option key={m}>{m}</option>)}
+              </select>
+            </label>
+            <label className="block">
+              <div className="text-sm text-slate-300 mb-1">Color</div>
+              <select name="color" className="w-full rounded-xl input-soft px-3 py-2 text-sm">
+                {COLORS.map(c => <option key={c}>{c}</option>)}
               </select>
             </label>
             <label className="block">

@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import INV from "../../lib/inventory.json";
+const { MATERIALS, COLORS } = INV;
 const CART_KEY = "dixon3d_cart";
 const money = (n) => "$" + (Math.round(n * 100) / 100).toFixed(2);
 
@@ -46,7 +48,19 @@ export default function ShopPage() {
             const res = await fetch("/api/paypal/create", {
               method: "POST",
               headers: { "content-type": "application/json" },
-              body: JSON.stringify({ amount: subtotal.toFixed(2), currency: "USD" })
+              body: JSON.stringify({
+                currency: "USD",
+                items: cart.map(i => ({
+                  id: i.id,
+                  name: i.name,
+                  qty: i.qty,
+                  price: i.price,
+                  material: i.material,
+                  color: i.color,
+                  finish: i.finish ?? "As-printed",
+                  scale: i.scale ?? 100
+                }))
+              })
             });
             const data = await res.json();
             if (!res.ok || !data.id) {
@@ -84,15 +98,17 @@ export default function ShopPage() {
     return () => {
       script.remove();
     };
-  }, [paypalClientId, subtotal]);
+  }, [paypalClientId, subtotal, cart]);
 
   function add(id, qty) {
     const p = PRODUCTS.find(x => x.id === id);
-    const key = id + "|100|" + p.material + "|As-printed";
+    const material = document.getElementById(`mat-${id}`)?.value || MATERIALS[0];
+    const color = document.getElementById(`color-${id}`)?.value || COLORS[0];
+    const key = `${id}|100|${material}|${color}|As-printed`;
     setCart((old) => {
       const i = old.findIndex(x => x.key === key);
       if (i >= 0) { const copy = [...old]; copy[i] = { ...copy[i], qty: copy[i].qty + qty }; return copy; }
-      return [...old, { key, id, name: p.name, price: p.price, qty, scale: 100, material: p.material, finish: "As-printed" }];
+      return [...old, { key, id, name: p.name, price: p.price, qty, scale: 100, material, color, finish: "As-printed" }];
     });
   }
   function updateQty(key, qty) { setCart(old => old.map(i => i.key === key ? { ...i, qty: Math.max(1, qty) } : i)); }
@@ -102,7 +118,19 @@ export default function ShopPage() {
       const res = await fetch("/api/paypal/create", {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ amount: subtotal.toFixed(2), currency: "USD" })
+        body: JSON.stringify({
+          currency: "USD",
+          items: cart.map(i => ({
+            id: i.id,
+            name: i.name,
+            qty: i.qty,
+            price: i.price,
+            material: i.material,
+            color: i.color,
+            finish: i.finish ?? "As-printed",
+            scale: i.scale ?? 100
+          }))
+        })
       });
       const data = await res.json();
       if (res.ok && data.approve) {
@@ -142,14 +170,24 @@ export default function ShopPage() {
                 <h3 className="font-semibold text-white">{p.name}</h3>
                 <span className="text-sm text-slate-300">{money(p.price)}</span>
               </div>
-              <p className="text-xs text-slate-400 mt-1">{p.material} • {p.category}</p>
-              <div className="mt-3 flex items-center gap-2">
-                <input type="number" min="1" defaultValue="1" id={`qty-${p.id}`}
-                       className="w-16 rounded-lg bubble-input px-2 py-1 text-sm"/>
-                <button onClick={() => add(p.id, parseInt(document.getElementById(`qty-${p.id}`).value || "1", 10))}
-                        className="rounded-lg bubble px-3 py-1.5 text-xs font-semibold hover:brightness-110">
-                  Add
-                </button>
+              <p className="text-xs text-slate-400 mt-1">{p.category}</p>
+              <div className="mt-3 space-y-2">
+                <div className="flex gap-2">
+                  <select id={`mat-${p.id}`} className="rounded-lg bubble-input px-2 py-1 text-xs">
+                    {MATERIALS.map(m => <option key={m}>{m}</option>)}
+                  </select>
+                  <select id={`color-${p.id}`} className="rounded-lg bubble-input px-2 py-1 text-xs">
+                    {COLORS.map(c => <option key={c}>{c}</option>)}
+                  </select>
+                </div>
+                <div className="flex items-center gap-2">
+                  <input type="number" min="1" defaultValue="1" id={`qty-${p.id}`}
+                         className="w-16 rounded-lg bubble-input px-2 py-1 text-sm"/>
+                  <button onClick={() => add(p.id, parseInt(document.getElementById(`qty-${p.id}`).value || "1", 10))}
+                          className="rounded-lg bubble px-3 py-1.5 text-xs font-semibold hover:brightness-110">
+                    Add
+                  </button>
+                </div>
               </div>
             </div>
           </article>
@@ -168,7 +206,7 @@ export default function ShopPage() {
               <div className="w-12 h-12 rounded-lg bg-slate-100 ring-1 ring-black/10" />
               <div className="grow">
                 <div className="font-medium">{it.name}</div>
-                <div className="text-xs text-slate-500">{money(it.price)} • {it.material} • {it.scale}% • {it.finish}</div>
+                <div className="text-xs text-slate-500">{money(it.price)} • {it.color} • {it.material} • {it.scale}% • {it.finish}</div>
                 <div className="mt-2 flex items-center gap-2">
                   <input type="number" min="1" value={it.qty}
                          onChange={(e)=>updateQty(it.key, parseInt(e.target.value||"1",10))}
