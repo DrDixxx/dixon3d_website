@@ -5,10 +5,10 @@ exports.handler = async (event) => {
   if (event.httpMethod === "GET") {
     return json(200, { envPresent: true, mode: "sandbox" });
   }
+  const invoiceId = `INV-${Date.now()}`;
   try {
     const body = JSON.parse(event.body || "{}");
     const { currency = "USD", items = [] } = body;
-    const invoiceId = `INV-${Date.now()}`;
     const token = await getAccessToken();
     const site = process.env.URL || process.env.DEPLOY_URL || "http://localhost:3000";
 
