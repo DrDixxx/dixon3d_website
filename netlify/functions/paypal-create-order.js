@@ -13,7 +13,7 @@ async function getAccessToken() {
       : process.env.PAYPAL_SANDBOX_CLIENT_ID;
   const secret =
     mode === "live"
-      ? process.env.PAYPAL_CLIENT_SECRET || process.env.PAYPAL_SECRET
+      ? process.env.PAYPAL_SECRET
       : process.env.PAYPAL_SANDBOX_CLIENT_SECRET;
   if (!id || !secret) {
     throw new Error("Missing PayPal credentials");
