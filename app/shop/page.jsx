@@ -94,6 +94,23 @@ export default function ShopPage() {
   }
   function updateQty(key, qty) { setCart(old => old.map(i => i.key === key ? { ...i, qty: Math.max(1, qty) } : i)); }
   function removeItem(key) { setCart(old => old.filter(i => i.key !== key)); }
+  async function checkout() {
+    try {
+      const res = await fetch("/api/paypal/create", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ amount: subtotal.toFixed(2), currency: "USD" })
+      });
+      const data = await res.json();
+      if (data.approve) {
+        window.location.href = data.approve;
+      } else {
+        alert(data.error || "Payment error");
+      }
+    } catch (e) {
+      alert(String(e));
+    }
+  }
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-24 pt-10">
@@ -124,7 +141,7 @@ export default function ShopPage() {
               <p className="text-xs text-slate-400 mt-1">{p.material} • {p.category}</p>
               <div className="mt-3 flex items-center gap-2">
                 <input type="number" min="1" defaultValue="1" id={`qty-${p.id}`}
-                       className="w-16 rounded-lg input-dark px-2 py-1 text-sm"/>
+                       className="w-16 rounded-lg bubble px-2 py-1 text-sm"/>
                 <button onClick={() => add(p.id, parseInt(document.getElementById(`qty-${p.id}`).value || "1", 10))}
                         className="rounded-lg bubble px-3 py-1.5 text-xs font-semibold hover:brightness-110">
                   Add
@@ -151,7 +168,7 @@ export default function ShopPage() {
                 <div className="mt-2 flex items-center gap-2">
                   <input type="number" min="1" value={it.qty}
                          onChange={(e)=>updateQty(it.key, parseInt(e.target.value||"1",10))}
-                         className="w-16 rounded-lg input-dark px-2 py-1 text-sm"/>
+                         className="w-16 rounded-lg bubble px-2 py-1 text-sm"/>
                   <button onClick={()=>removeItem(it.key)} className="text-xs text-slate-600 hover:text-black">Remove</button>
                 </div>
               </div>
@@ -159,6 +176,10 @@ export default function ShopPage() {
           ))}
         </div>
         <div id="paypal-buttons" className="mt-4" />
+        <button onClick={checkout}
+                className="mt-4 rounded-xl bubble px-4 py-2 text-sm font-semibold hover:brightness-110">
+          Purchase
+        </button>
       </section>
     </div>
   );
