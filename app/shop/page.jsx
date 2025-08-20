@@ -48,7 +48,7 @@ export default function ShopPage() {
     });
     const data = await res.json();
     if (data?.approve) window.location.href = data.approve;
-    else alert("Could not start PayPal checkout.");
+    else alert(data?.error || "Could not start PayPal checkout.");
   }
 
   return (
@@ -80,7 +80,7 @@ export default function ShopPage() {
               <p className="text-xs text-slate-400 mt-1">{p.material} • {p.category}</p>
               <div className="mt-3 flex items-center gap-2">
                 <input type="number" min="1" defaultValue="1" id={`qty-${p.id}`}
-                       className="w-16 rounded-lg input-soft px-2 py-1 text-sm"/>
+                       className="w-16 rounded-lg input-dark px-2 py-1 text-sm"/>
                 <button onClick={() => add(p.id, parseInt(document.getElementById(`qty-${p.id}`).value || "1", 10))}
                         className="rounded-lg bubble px-3 py-1.5 text-xs font-semibold hover:brightness-110">
                   Add
@@ -91,7 +91,7 @@ export default function ShopPage() {
         ))}
       </div>
 
-      <section className="mt-10 rounded-2xl bg-white text-slate-900 p-4">
+      <section className="mt-10 rounded-2xl panel text-slate-100 p-4">
         <div className="flex items-center justify-between">
           <h3 className="text-lg font-semibold">Your Cart</h3>
           <div className="text-lg font-semibold">{money(subtotal)}</div>
@@ -107,7 +107,7 @@ export default function ShopPage() {
                 <div className="mt-2 flex items-center gap-2">
                   <input type="number" min="1" value={it.qty}
                          onChange={(e)=>updateQty(it.key, parseInt(e.target.value||"1",10))}
-                         className="w-16 rounded-lg input-soft px-2 py-1 text-sm"/>
+                         className="w-16 rounded-lg input-dark px-2 py-1 text-sm"/>
                   <button onClick={()=>removeItem(it.key)} className="text-xs text-slate-600 hover:text-black">Remove</button>
                 </div>
               </div>
