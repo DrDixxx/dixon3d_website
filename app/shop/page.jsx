@@ -21,12 +21,16 @@ const PRODUCTS = [
     customize: true,
   },
   {
-    id: "clip",
-    name: "Cable Clip Set (x6)",
+    id: "chessboard",
+    name: "Magnetic Puzzle Chessboard w/ Pieces",
     price: 8.5,
     material: "PLA",
     category: "Desk",
-    description: "Six clips to tame cables.",
+    description: "Modular magnetic chessboard with puzzle-fit pieces.",
+    images: [
+      "/assets/img/Chessboard_Full.png",
+      "/assets/img/Chessboard_Pieces.png",
+    ],
   },
   {
     id: "insole",
@@ -200,7 +204,6 @@ export default function ShopPage() {
             <h3 className="font-semibold text-white">{p.name}</h3>
             <span className="text-sm text-slate-300">{money(p.price)}</span>
           </div>
-          <p className="text-xs text-slate-400 mt-1">{p.category}</p>
           {p.description && (
             <p className="text-xs text-slate-400 mt-1">{p.description}</p>
           )}

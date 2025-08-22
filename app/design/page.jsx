@@ -1,10 +1,19 @@
 "use client";
 
 import Image from "next/image";
+import { useState } from "react";
 import INV from "../../lib/inventory.json";
 const { MATERIALS, COLORS } = INV;
 
 export default function DesignPage() {
+  const [img, setImg] = useState(0);
+  const imgs = [
+    { src: "/assets/img/WindowSlide_Drawing.png", alt: "Technical drawing" },
+    { src: "/assets/img/CastingPumpPattern.png", alt: "Casting pump pattern" },
+    { src: "/assets/img/PegBoard_Full.PNG", alt: "Pegboard system" },
+    { src: "/assets/img/BusinessCard_Printed.png", alt: "Printed business card" },
+  ];
+
   async function onSubmit(e){
     e.preventDefault();
     const form = e.currentTarget;
@@ -72,13 +81,28 @@ export default function DesignPage() {
       </section>
 
       <div className="flex justify-center">
-        <Image
-          src="/assets/img/CastingPumpPattern.png"
-          alt="Casting pump pattern"
-          width={1200}
-          height={800}
-          className="rounded-3xl"
-        />
+        <div className="relative w-full max-w-2xl aspect-[4/3] rounded-3xl overflow-hidden">
+          <Image
+            src={imgs[img].src}
+            alt={imgs[img].alt}
+            fill
+            className="object-contain"
+          />
+          <button
+            onClick={() => setImg((img - 1 + imgs.length) % imgs.length)}
+            className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/40 text-white text-sm rounded-full w-8 h-8"
+            aria-label="Previous image"
+          >
+            ‹
+          </button>
+          <button
+            onClick={() => setImg((img + 1) % imgs.length)}
+            className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/40 text-white text-sm rounded-full w-8 h-8"
+            aria-label="Next image"
+          >
+            ›
+          </button>
+        </div>
       </div>
 
       <section>
