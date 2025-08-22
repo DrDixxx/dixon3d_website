@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import INV from "../../lib/inventory.json";
 const { MATERIALS, COLORS } = INV;
 
@@ -69,6 +70,16 @@ export default function DesignPage() {
           </article>
         </div>
       </section>
+
+      <div className="flex justify-center">
+        <Image
+          src="/assets/img/CastingPumpPattern.png"
+          alt="Casting pump pattern"
+          width={1200}
+          height={800}
+          className="rounded-3xl"
+        />
+      </div>
 
       <section>
         <h3 className="text-xl font-semibold">Design & Quote</h3>
