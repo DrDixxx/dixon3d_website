@@ -30,7 +30,7 @@ export default function Nav() {
             src="/assets/img/D3D_Logo.png"
             width={60}
             height={60}
-            className="h-[60px] w-[60px] object-contain"
+            className="h-[60px] w-[60px] object-contain rounded-lg"
           />
           <div className="text-base font-semibold">Dixon 3D</div>
         </Link>
