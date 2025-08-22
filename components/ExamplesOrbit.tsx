@@ -167,7 +167,9 @@ export default function ExamplesOrbit({
       {images.map((img, i) => (
         <div
           key={i}
-          ref={el => (itemsRef.current[i] = el!)}
+          ref={el => {
+            itemsRef.current[i] = el!;
+          }}
           className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-xl"
         >
           <Image
