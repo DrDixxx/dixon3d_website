@@ -1,18 +1,16 @@
 "use client";
 
-import Image from "next/image";
-import { useState } from "react";
 import INV from "../../lib/inventory.json";
+import ExamplesOrbit from "../../components/ExamplesOrbit";
+import { EXAMPLES } from "../../lib/examples";
 const { MATERIALS, COLORS } = INV;
 
 export default function DesignPage() {
-  const [img, setImg] = useState(0);
-  const imgs = [
-    { src: "/assets/img/WindowSlide_Drawing.png", alt: "Technical drawing" },
-    { src: "/assets/img/CastingPumpPattern.png", alt: "Casting pump pattern" },
-    { src: "/assets/img/PegBoard_Full.PNG", alt: "Pegboard system" },
-    { src: "/assets/img/BusinessCard_Printed.png", alt: "Printed business card" },
-  ];
+  const designImgs = EXAMPLES.filter(e => e.process === "design").map(e => ({
+    src: e.src,
+    alt: e.alt,
+    caption: e.title,
+  }));
 
   async function onSubmit(e){
     e.preventDefault();
@@ -80,30 +78,7 @@ export default function DesignPage() {
         </div>
       </section>
 
-      <div className="flex justify-center">
-        <div className="relative w-full max-w-2xl aspect-[4/3] rounded-3xl overflow-hidden">
-          <Image
-            src={imgs[img].src}
-            alt={imgs[img].alt}
-            fill
-            className="object-contain"
-          />
-          <button
-            onClick={() => setImg((img - 1 + imgs.length) % imgs.length)}
-            className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/40 text-white text-sm rounded-full w-8 h-8"
-            aria-label="Previous image"
-          >
-            ‹
-          </button>
-          <button
-            onClick={() => setImg((img + 1) % imgs.length)}
-            className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/40 text-white text-sm rounded-full w-8 h-8"
-            aria-label="Next image"
-          >
-            ›
-          </button>
-        </div>
-      </div>
+      <ExamplesOrbit images={designImgs} className="my-12" />
 
       <section>
         <h3 className="text-xl font-semibold">Design & Quote</h3>
