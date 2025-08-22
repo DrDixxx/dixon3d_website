@@ -49,7 +49,7 @@ export default function ExamplesOrbit({
     return () => m.removeEventListener("change", handler);
   }, []);
 
-  // resize observer to compute radius and item size
+  // resize observer to compute radius and item size; falls back when unsupported
   useEffect(() => {
     const el = containerRef.current;
     if (!el) return;
