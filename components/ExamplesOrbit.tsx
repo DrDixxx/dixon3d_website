@@ -33,6 +33,7 @@ export default function ExamplesOrbit({
   const [active, setActive] = useState(0);
   const offsetsRef = useRef<number[]>([]);
   const [reduce, setReduce] = useState(false);
+  const [roSupported, setRoSupported] = useState(true);
 
   // setup offsets whenever images change
   useEffect(() => {
@@ -48,17 +49,24 @@ export default function ExamplesOrbit({
     return () => m.removeEventListener("change", handler);
   }, []);
 
-  // resize observer to compute radius and item size
+  // resize observer to compute radius and item size; falls back when unsupported
   useEffect(() => {
     const el = containerRef.current;
     if (!el) return;
-    const ro = new ResizeObserver(entries => {
-      const rect = entries[0].contentRect;
-      const s = Math.min(rect.width, rect.height);
+    if (typeof ResizeObserver !== "undefined") {
+      const ro = new ResizeObserver(entries => {
+        const rect = entries[0].contentRect;
+        const s = Math.min(rect.width, rect.height);
+        setDims({ radius: s * radiusFrac, item: s * itemSizeFrac });
+      });
+      ro.observe(el);
+      return () => ro.disconnect();
+    } else {
+      setRoSupported(false);
+      const rect = el.getBoundingClientRect();
+      const s = Math.min(rect.width, rect.height) || 300;
       setDims({ radius: s * radiusFrac, item: s * itemSizeFrac });
-    });
-    ro.observe(el);
-    return () => ro.disconnect();
+    }
   }, [radiusFrac, itemSizeFrac]);
 
   const updateStyles = useCallback(() => {
@@ -138,6 +146,11 @@ export default function ExamplesOrbit({
       onFocusCapture={pause}
       onBlurCapture={resume}
     >
+      {!roSupported && (
+        <div className="pointer-events-none absolute top-2 left-1/2 z-10 -translate-x-1/2 rounded bg-red-600/80 px-2 py-1 text-xs text-white">
+          ResizeObserver not supported
+        </div>
+      )}
       {/* ring */}
       <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
         <div
