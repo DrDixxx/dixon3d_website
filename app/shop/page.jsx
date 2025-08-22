@@ -1,18 +1,74 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import Image from "next/image";
+import Link from "next/link";
 import INV from "../../lib/inventory.json";
 const { MATERIALS, COLORS } = INV;
 const CART_KEY = "dixon3d_cart";
 const money = (n) => "$" + (Math.round(n * 100) / 100).toFixed(2);
 
 const PRODUCTS = [
-  { id:"stand",  name:"Minimal Phone Stand",       price:12.00, material:"PETG",     category:"Desk"      },
-  { id:"clip",   name:"Cable Clip Set (x6)",       price:8.50,  material:"PLA",      category:"Desk"      },
-  { id:"insole", name:"Custom TPU Insole",         price:30.00, material:"TPU 95A",  category:"Wearables" },
-  { id:"planter",name:"Geometric Planter (120mm)", price:18.00, material:"PLA",      category:"Home"      },
-  { id:"mount",  name:"GoPro-style Mount",         price:14.00, material:"ABS",      category:"Outdoors"  },
-  { id:"hook",   name:"Utility Wall Hook (pair)",  price:9.00,  material:"CF-Nylon", category:"Garage"    }
+  {
+    id: "card",
+    name: "Custom Business Cards",
+    price: 12.0,
+    material: "PLA",
+    color: "Black",
+    category: "Desk",
+    description: "Durable printed cards tailored to your brand.",
+    images: ["/assets/img/BusinessCard_Printed.png"],
+    customize: true,
+  },
+  {
+    id: "clip",
+    name: "Cable Clip Set (x6)",
+    price: 8.5,
+    material: "PLA",
+    category: "Desk",
+    description: "Six clips to tame cables.",
+  },
+  {
+    id: "insole",
+    name: "Custom TPU Insole",
+    price: 30.0,
+    material: "TPU 95A",
+    category: "Wearables",
+    description: "Tailored insoles for comfort.",
+  },
+  {
+    id: "planter",
+    name: "Geometric Planter (120mm)",
+    price: 18.0,
+    material: "PLA",
+    category: "Home",
+    description: "Faceted planter for small succulents.",
+  },
+  {
+    id: "pegboard",
+    name: "Customizable Pegboard",
+    price: 14.0,
+    material: "ABS",
+    color: "Black",
+    category: "Workshop",
+    description:
+      "Pegboard kit with panel, holder, tool hooks and hardware.",
+    images: [
+      "/assets/img/PegBoard_Full.PNG",
+      "/assets/img/PegBoard_Panel.png",
+      "/assets/img/PegBoard_Holder.PNG",
+      "/assets/img/PegBoard_Bolts.PNG",
+      "/assets/img/PegBoard_ToolHolder.PNG",
+    ],
+  },
+  {
+    id: "hook",
+    name: "Utility Wall Hook (pair)",
+    price: 9.0,
+    material: "CF-Nylon",
+    category: "Garage",
+    description: "Strong hooks for shop or garage.",
+  },
 ];
 
 export default function ShopPage() {
@@ -100,6 +156,133 @@ export default function ShopPage() {
     };
   }, [paypalClientId, subtotal, cart]);
 
+  function ProductCard({ p }) {
+    const [img, setImg] = useState(0);
+    const imgs = p.images || [];
+    return (
+      <article className="rounded-2xl border border-white/20 bg-white/5 overflow-hidden text-slate-100">
+        <div className="aspect-[4/3] relative">
+          {imgs.length > 0 ? (
+            <>
+              <Image
+                src={imgs[img]}
+                alt={p.name}
+                fill
+                className="object-cover"
+              />
+              {imgs.length > 1 && (
+                <>
+                  <button
+                    onClick={() =>
+                      setImg((img - 1 + imgs.length) % imgs.length)
+                    }
+                    className="absolute left-1 top-1/2 -translate-y-1/2 bg-black/40 text-white text-xs rounded-full w-6 h-6"
+                    aria-label="Previous image"
+                  >
+                    ‹
+                  </button>
+                  <button
+                    onClick={() => setImg((img + 1) % imgs.length)}
+                    className="absolute right-1 top-1/2 -translate-y-1/2 bg-black/40 text-white text-xs rounded-full w-6 h-6"
+                    aria-label="Next image"
+                  >
+                    ›
+                  </button>
+                </>
+              )}
+            </>
+          ) : (
+            <div className="w-full h-full bg-gradient-to-br from-slate-800/10 to-slate-700/10" />
+          )}
+        </div>
+        <div className="p-4">
+          <div className="flex items-center justify-between gap-2">
+            <h3 className="font-semibold text-white">{p.name}</h3>
+            <span className="text-sm text-slate-300">{money(p.price)}</span>
+          </div>
+          <p className="text-xs text-slate-400 mt-1">{p.category}</p>
+          {p.description && (
+            <p className="text-xs text-slate-400 mt-1">{p.description}</p>
+          )}
+          <div className="mt-3 space-y-2">
+            {p.customize ? (
+              <>
+                <div className="flex gap-2">
+                  <select
+                    disabled
+                    defaultValue={p.material}
+                    className="rounded-lg bubble-input px-2 py-1 text-xs opacity-50"
+                  >
+                    <option>{p.material}</option>
+                  </select>
+                  <select
+                    disabled
+                    defaultValue={p.color}
+                    className="rounded-lg bubble-input px-2 py-1 text-xs opacity-50"
+                  >
+                    <option>{p.color}</option>
+                  </select>
+                </div>
+                <Link
+                  href="/design#quote-form"
+                  className="block text-center rounded-lg bubble px-3 py-1.5 text-xs font-semibold hover:brightness-110"
+                >
+                  Customize
+                </Link>
+              </>
+            ) : (
+              <>
+                <div className="flex gap-2">
+                  <select
+                    id={`mat-${p.id}`}
+                    defaultValue={p.material}
+                    className="rounded-lg bubble-input px-2 py-1 text-xs"
+                  >
+                    {MATERIALS.map((m) => (
+                      <option key={m}>{m}</option>
+                    ))}
+                  </select>
+                  <select
+                    id={`color-${p.id}`}
+                    defaultValue={p.color || COLORS[0]}
+                    className="rounded-lg bubble-input px-2 py-1 text-xs"
+                  >
+                    {COLORS.map((c) => (
+                      <option key={c}>{c}</option>
+                    ))}
+                  </select>
+                </div>
+                <div className="flex items-center gap-2">
+                  <input
+                    type="number"
+                    min="1"
+                    defaultValue="1"
+                    id={`qty-${p.id}`}
+                    className="w-16 rounded-lg bubble-input px-2 py-1 text-sm"
+                  />
+                  <button
+                    onClick={() =>
+                      add(
+                        p.id,
+                        parseInt(
+                          document.getElementById(`qty-${p.id}`).value || "1",
+                          10
+                        )
+                      )
+                    }
+                    className="rounded-lg bubble px-3 py-1.5 text-xs font-semibold hover:brightness-110"
+                  >
+                    Add
+                  </button>
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+      </article>
+    );
+  }
+
   function add(id, qty) {
     const p = PRODUCTS.find(x => x.id === id);
     const material = document.getElementById(`mat-${id}`)?.value || MATERIALS[0];
@@ -162,35 +345,8 @@ export default function ShopPage() {
       </div>
 
       <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
-        {shown.map(p => (
-          <article key={p.id} className="rounded-2xl border border-white/20 bg-white/5 overflow-hidden text-slate-100">
-            <div className="aspect-[4/3] bg-gradient-to-br from-slate-800/10 to-slate-700/10 relative" />
-            <div className="p-4">
-              <div className="flex items-center justify-between gap-2">
-                <h3 className="font-semibold text-white">{p.name}</h3>
-                <span className="text-sm text-slate-300">{money(p.price)}</span>
-              </div>
-              <p className="text-xs text-slate-400 mt-1">{p.category}</p>
-              <div className="mt-3 space-y-2">
-                <div className="flex gap-2">
-                  <select id={`mat-${p.id}`} className="rounded-lg bubble-input px-2 py-1 text-xs">
-                    {MATERIALS.map(m => <option key={m}>{m}</option>)}
-                  </select>
-                  <select id={`color-${p.id}`} className="rounded-lg bubble-input px-2 py-1 text-xs">
-                    {COLORS.map(c => <option key={c}>{c}</option>)}
-                  </select>
-                </div>
-                <div className="flex items-center gap-2">
-                  <input type="number" min="1" defaultValue="1" id={`qty-${p.id}`}
-                         className="w-16 rounded-lg bubble-input px-2 py-1 text-sm"/>
-                  <button onClick={() => add(p.id, parseInt(document.getElementById(`qty-${p.id}`).value || "1", 10))}
-                          className="rounded-lg bubble px-3 py-1.5 text-xs font-semibold hover:brightness-110">
-                    Add
-                  </button>
-                </div>
-              </div>
-            </div>
-          </article>
+        {shown.map((p) => (
+          <ProductCard key={p.id} p={p} />
         ))}
       </div>
 
