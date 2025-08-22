@@ -6,9 +6,14 @@ import { EXAMPLES } from "../../lib/examples";
 const { MATERIALS, COLORS } = INV;
 
 export default function DesignPage() {
-  const designImgs = EXAMPLES.filter(e => e.process === "design").map(e => ({
+  let imgs = EXAMPLES.filter(e => e.process === "design");
+  if (imgs.length === 0) {
+    const common = EXAMPLES.filter(e => ["fdm", "cad"].includes(e.process));
+    imgs = common.length > 0 ? common : EXAMPLES;
+  }
+  const orbitImgs = imgs.map(e => ({
     src: e.src,
-    alt: e.alt,
+    alt: e.title ?? e.alt ?? "Example",
     caption: e.title,
   }));
 
@@ -78,7 +83,11 @@ export default function DesignPage() {
         </div>
       </section>
 
-      <ExamplesOrbit images={designImgs} className="my-12" />
+      {orbitImgs.length > 0 ? (
+        <ExamplesOrbit images={orbitImgs} className="my-12" />
+      ) : (
+        <p className="my-12 text-center text-sm text-slate-400">No examples available.</p>
+      )}
 
       <section>
         <h3 className="text-xl font-semibold">Design & Quote</h3>
