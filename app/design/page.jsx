@@ -4,26 +4,41 @@ import Image from "next/image";
 import INV from "../../lib/inventory.json";
 const { MATERIALS, COLORS } = INV;
 
-const SPOTLIGHT = [
+const EXAMPLES = [
   {
-    src: "/assets/img/HuskeyWallMount-1.jpeg",
-    alt: "Broken wall mount piece",
-    caption: "Broken Wall Mount - To Replace",
+    title: "To Replace",
+    images: [
+      {
+        src: "/assets/img/HuskeyWallMount-1.jpeg",
+        alt: "Broken wall mount piece",
+        caption: "Broken Wall Mount - To Replace",
+      },
+      {
+        src: "/assets/img/HuskeyWallMount-2.jpeg",
+        alt: "Attachment area for verification",
+        caption: "Attachment Side For Feature Check",
+      },
+    ],
   },
   {
-    src: "/assets/img/HuskeyWallMount-2.jpeg",
-    alt: "Attachment area for verification",
-    caption: "Attachment Side For Feature Check",
+    title: "Mockup",
+    images: [
+      {
+        src: "/assets/img/HuskeyWallMount_Drawing.png",
+        alt: "Drawing of replacement wall mount",
+        caption: "Drawing of Replacement for Dimensional Assurance",
+      },
+    ],
   },
   {
-    src: "/assets/img/HuskeyWallMount_Drawing.png",
-    alt: "Drawing of replacement wall mount",
-    caption: "Drawing of Replacement for Dimensional Assurance",
-  },
-  {
-    src: "/assets/img/HuskyWallMount-Render.png",
-    alt: "Render of finished wall mount",
-    caption: "AI Enhanced Final Product - Material: ABS",
+    title: "Final",
+    images: [
+      {
+        src: "/assets/img/HuskyWallMount-Render.png",
+        alt: "Render of finished wall mount",
+        caption: "AI Enhanced Final Product - Material: ABS",
+      },
+    ],
   },
 ];
 
@@ -59,15 +74,22 @@ export default function DesignPage() {
   return (
     <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pb-24 pt-10 space-y-10">
       <section className="rounded-3xl panel p-4">
-        <h3 className="text-xl font-semibold mb-3">Spotlight</h3>
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-          {SPOTLIGHT.map(step => (
-            <div key={step.src} className="text-center space-y-1">
-              <figure className="relative overflow-hidden rounded-2xl bubble aspect-square">
-                <Image src={step.src} alt={step.alt} fill className="object-cover" />
-              </figure>
-              <div className="text-xs text-slate-300">{step.caption}</div>
-            </div>
+        <h3 className="text-xl font-semibold mb-3">Examples</h3>
+        <div className="grid sm:grid-cols-3 gap-3">
+          {EXAMPLES.map(group => (
+            <fieldset key={group.title} className="rounded-2xl border border-white/20 p-2">
+              <legend className="mx-auto px-2 text-xs text-slate-300">{group.title}</legend>
+              <div className={`grid gap-3 ${group.images.length > 1 ? 'grid-cols-1' : ''}`}>
+                {group.images.map(img => (
+                  <div key={img.src} className="text-center space-y-1">
+                    <figure className={`relative overflow-hidden rounded-2xl bubble ${group.images.length > 1 ? 'aspect-video' : 'aspect-square'}`}>
+                      <Image src={img.src} alt={img.alt} fill className="object-cover" />
+                    </figure>
+                    <div className="text-xs text-slate-300">{img.caption}</div>
+                  </div>
+                ))}
+              </div>
+            </fieldset>
           ))}
         </div>
       </section>
