@@ -8,22 +8,22 @@ const SPOTLIGHT = [
   {
     src: "/assets/img/HuskeyWallMount-1.jpeg",
     alt: "Broken wall mount piece",
-    caption: "Broken piece to replicate",
+    caption: "Broken Wall Mount - To Replace",
   },
   {
     src: "/assets/img/HuskeyWallMount-2.jpeg",
     alt: "Attachment area for verification",
-    caption: "Attachment side for fit check",
+    caption: "Attachment Side For Feature Check",
   },
   {
     src: "/assets/img/HuskeyWallMount_Drawing.png",
     alt: "Drawing of replacement wall mount",
-    caption: "CAD drawing of replacement",
+    caption: "Drawing of Replacement for Dimensional Assurance",
   },
   {
     src: "/assets/img/HuskyWallMount-Render.png",
     alt: "Render of finished wall mount",
-    caption: "Final render of new mount",
+    caption: "AI Enhanced Final Product - Material: ABS",
   },
 ];
 
