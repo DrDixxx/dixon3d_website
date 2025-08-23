@@ -11,18 +11,19 @@ const money = (n) => "$" + (Math.round(n * 100) / 100).toFixed(2);
 const PRODUCTS = [
   {
     id: "card",
-    name: "Custom Business Cards",
-    price: 12.0,
+    name: "Custom Business Cards (10x)",
+    price: 5.0,
     material: "PLA",
     color: "Black",
     description: "Durable printed cards tailored to your brand.",
     images: ["/assets/img/BusinessCard_Printed.png"],
     customize: true,
+    noMC: true,
   },
   {
     id: "chessboard",
     name: "Magnetic Puzzle Chessboard w/ Pieces",
-    price: 8.5,
+    price: 40.0,
     material: "PLA",
     description: "Modular magnetic chessboard with puzzle-fit pieces.",
     images: [
@@ -33,21 +34,22 @@ const PRODUCTS = [
   {
     id: "insole",
     name: "Custom TPU Insole",
-    price: 30.0,
+    price: 20.0,
     material: "TPU 95A",
     description: "Tailored insoles for comfort.",
   },
   {
     id: "planter",
-    name: "Geometric Planter (120mm)",
-    price: 18.0,
+    name: "Plant Pot - 1.5 gal",
+    price: 12.5,
     material: "PLA",
     description: "Faceted planter for small succulents.",
+    images: ["/assets/img/HalfGal_PlantHolder.png"],
   },
   {
     id: "pegboard",
     name: "Customizable Pegboard",
-    price: 14.0,
+    price: 50.0,
     material: "ABS",
     color: "Black",
     description:
@@ -63,7 +65,7 @@ const PRODUCTS = [
   {
     id: "enclosure",
     name: "Custom Sized Framing/Enclosure",
-    price: 0.0,
+    price: null,
     material: "PLA",
     color: "Black",
     description: "Submit your dimensions for a tailored frame or enclosure.",
@@ -72,6 +74,7 @@ const PRODUCTS = [
       "/assets/img/Enclosure_Drawing.png",
     ],
     customize: true,
+    noMC: true,
   },
 ];
 
@@ -199,7 +202,9 @@ export default function ShopPage() {
         <div className="p-4">
           <div className="flex items-center justify-between gap-2">
             <h3 className="font-semibold text-white">{p.name}</h3>
-            <span className="text-sm text-slate-300">{money(p.price)}</span>
+            <span className="text-sm text-slate-300">
+              {p.price == null ? "Variable" : money(p.price)}
+            </span>
           </div>
           {p.description && (
             <p className="text-xs text-slate-400 mt-1">{p.description}</p>
@@ -207,22 +212,24 @@ export default function ShopPage() {
           <div className="mt-3 space-y-2">
             {p.customize ? (
               <>
-                <div className="flex gap-2">
-                  <select
-                    disabled
-                    defaultValue={p.material}
-                    className="rounded-lg bubble-input px-2 py-1 text-xs opacity-50"
-                  >
-                    <option>{p.material}</option>
-                  </select>
-                  <select
-                    disabled
-                    defaultValue={p.color}
-                    className="rounded-lg bubble-input px-2 py-1 text-xs opacity-50"
-                  >
-                    <option>{p.color}</option>
-                  </select>
-                </div>
+                {!p.noMC && (
+                  <div className="flex gap-2">
+                    <select
+                      disabled
+                      defaultValue={p.material}
+                      className="rounded-lg bubble-input px-2 py-1 text-xs opacity-50"
+                    >
+                      <option>{p.material}</option>
+                    </select>
+                    <select
+                      disabled
+                      defaultValue={p.color}
+                      className="rounded-lg bubble-input px-2 py-1 text-xs opacity-50"
+                    >
+                      <option>{p.color}</option>
+                    </select>
+                  </div>
+                )}
                 <Link
                   href="/design#quote-form"
                   className="block text-center rounded-lg bubble px-3 py-1.5 text-xs font-semibold hover:brightness-110"
