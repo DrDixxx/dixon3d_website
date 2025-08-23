@@ -80,7 +80,7 @@ export default function DesignPage() {
           {EXAMPLES.map(group => (
           <fieldset key={group.title} className="rounded-2xl border border-white/20 p-2">
             <legend className="mx-auto px-2 text-xs text-slate-300">{group.title}</legend>
-            <div className={`grid gap-3 ${group.images.length > 1 ? 'grid-cols-2' : ''}`}>
+            <div className="grid gap-3">
               {group.images.map(img => (
                 <div key={img.src} className="text-center space-y-1">
                     <figure className={`relative overflow-hidden rounded-2xl bubble ${group.landscape ? 'aspect-[16/9]' : 'aspect-square'}`}>
