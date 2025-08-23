@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import INV from "../../lib/inventory.json";
@@ -15,7 +15,6 @@ const PRODUCTS = [
     price: 12.0,
     material: "PLA",
     color: "Black",
-    category: "Desk",
     description: "Durable printed cards tailored to your brand.",
     images: ["/assets/img/BusinessCard_Printed.png"],
     customize: true,
@@ -25,7 +24,6 @@ const PRODUCTS = [
     name: "Magnetic Puzzle Chessboard w/ Pieces",
     price: 8.5,
     material: "PLA",
-    category: "Desk",
     description: "Modular magnetic chessboard with puzzle-fit pieces.",
     images: [
       "/assets/img/Chessboard_Full.png",
@@ -37,7 +35,6 @@ const PRODUCTS = [
     name: "Custom TPU Insole",
     price: 30.0,
     material: "TPU 95A",
-    category: "Wearables",
     description: "Tailored insoles for comfort.",
   },
   {
@@ -45,7 +42,6 @@ const PRODUCTS = [
     name: "Geometric Planter (120mm)",
     price: 18.0,
     material: "PLA",
-    category: "Home",
     description: "Faceted planter for small succulents.",
   },
   {
@@ -54,7 +50,6 @@ const PRODUCTS = [
     price: 14.0,
     material: "ABS",
     color: "Black",
-    category: "Workshop",
     description:
       "Pegboard kit with panel, holder, tool hooks and hardware.",
     images: [
@@ -66,27 +61,29 @@ const PRODUCTS = [
     ],
   },
   {
-    id: "hook",
-    name: "Utility Wall Hook (pair)",
-    price: 9.0,
-    material: "CF-Nylon",
-    category: "Garage",
-    description: "Strong hooks for shop or garage.",
+    id: "enclosure",
+    name: "Custom Sized Framing/Enclosure",
+    price: 0.0,
+    material: "PLA",
+    color: "Black",
+    description: "Submit your dimensions for a tailored frame or enclosure.",
+    images: [
+      "/assets/img/Enclosure_Render.png",
+      "/assets/img/Enclosure_Drawing.png",
+    ],
+    customize: true,
   },
 ];
 
 export default function ShopPage() {
   const [cart, setCart] = useState([]);
   const [search, setSearch] = useState("");
-  const [filter, setFilter] = useState("All");
   const paypalClientId = process.env.NEXT_PUBLIC_PAYPAL_ID; // set via env, sandbox for testing
 
   useEffect(() => { try { setCart(JSON.parse(localStorage.getItem(CART_KEY) || "[]")); } catch {} }, []);
   useEffect(() => { localStorage.setItem(CART_KEY, JSON.stringify(cart)); }, [cart]);
 
-  const cats = useMemo(() => ["All", ...new Set(PRODUCTS.map(p => p.category))], []);
   const shown = PRODUCTS.filter(p =>
-    (filter === "All" || p.category === filter) &&
     (p.name + " " + p.material).toLowerCase().includes(search.toLowerCase())
   );
   const subtotal = cart.reduce((s, p) => s + p.price * p.qty, 0);
@@ -340,10 +337,6 @@ export default function ShopPage() {
         <div className="mt-4 md:mt-0 flex gap-2">
           <input value={search} onChange={e=>setSearch(e.target.value)}
                  placeholder="Search…" className="w-56 rounded-xl input-soft px-3 py-2 text-sm"/>
-          <select value={filter} onChange={e=>setFilter(e.target.value)}
-                  className="rounded-xl input-soft px-3 py-2 text-sm">
-            {cats.map(c => <option key={c}>{c}</option>)}
-          </select>
         </div>
       </div>
 
