@@ -1,7 +1,7 @@
 "use client";
 
+import Image from "next/image";
 import INV from "../../lib/inventory.json";
-import ExamplesOrbit from "../../components/ExamplesOrbit";
 import { EXAMPLES } from "../../lib/examples";
 const { MATERIALS, COLORS } = INV;
 
@@ -11,11 +11,7 @@ export default function DesignPage() {
     const common = EXAMPLES.filter(e => ["fdm", "cad"].includes(e.process));
     imgs = common.length > 0 ? common : EXAMPLES;
   }
-  const orbitImgs = imgs.map(e => ({
-    src: e.src,
-    alt: e.title ?? e.alt ?? "Example",
-    caption: e.title,
-  }));
+  imgs = imgs.slice(0,5);
 
   async function onSubmit(e){
     e.preventDefault();
@@ -83,11 +79,20 @@ export default function DesignPage() {
         </div>
       </section>
 
-      {orbitImgs.length > 0 ? (
-        <ExamplesOrbit images={orbitImgs} className="my-12" />
-      ) : (
-        <p className="my-12 text-center text-sm text-slate-400">No examples available.</p>
-      )}
+      <section className="rounded-3xl panel p-4">
+        <h3 className="text-xl font-semibold mb-3">Work Under Review</h3>
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
+          {imgs.length > 0 ? (
+            imgs.map(img => (
+              <figure key={img.src} className="relative overflow-hidden rounded-2xl bubble aspect-square">
+                <Image src={img.src} alt={img.title ?? img.alt ?? 'Example'} fill className="object-cover" />
+              </figure>
+            ))
+          ) : (
+            <p className="col-span-full text-center text-sm text-slate-400">No examples available.</p>
+          )}
+        </div>
+      </section>
 
       <section>
         <h3 className="text-xl font-semibold">Design & Quote</h3>
