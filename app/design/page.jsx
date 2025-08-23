@@ -83,7 +83,15 @@ export default function DesignPage() {
             <div className="grid gap-3">
               {group.images.map(img => (
                 <div key={img.src} className="text-center space-y-1">
-                    <figure className={`relative overflow-hidden rounded-2xl bubble ${group.landscape ? 'aspect-[16/9]' : 'aspect-square'}`}>
+                    <figure
+                      className={`relative overflow-hidden rounded-2xl bubble ${
+                        group.landscape
+                          ? group.images.length > 1
+                            ? 'aspect-[2/1]'
+                            : 'aspect-[16/9]'
+                          : 'aspect-square'
+                      }`}
+                    >
                       <Image src={img.src} alt={img.alt} fill className="object-cover" />
                     </figure>
                     <div className="text-xs text-slate-300">{img.caption}</div>
