@@ -2,17 +2,32 @@
 
 import Image from "next/image";
 import INV from "../../lib/inventory.json";
-import { EXAMPLES } from "../../lib/examples";
 const { MATERIALS, COLORS } = INV;
 
-export default function DesignPage() {
-  let imgs = EXAMPLES.filter(e => e.process === "design");
-  if (imgs.length === 0) {
-    const common = EXAMPLES.filter(e => ["fdm", "cad"].includes(e.process));
-    imgs = common.length > 0 ? common : EXAMPLES;
-  }
-  imgs = imgs.slice(0,5);
+const SPOTLIGHT = [
+  {
+    src: "/assets/img/HuskeyWallMount-1.jpeg",
+    alt: "Broken wall mount piece",
+    caption: "Broken piece to replicate",
+  },
+  {
+    src: "/assets/img/HuskeyWallMount-2.jpeg",
+    alt: "Attachment area for verification",
+    caption: "Attachment side for fit check",
+  },
+  {
+    src: "/assets/img/HuskeyWallMount_Drawing.png",
+    alt: "Drawing of replacement wall mount",
+    caption: "CAD drawing of replacement",
+  },
+  {
+    src: "/assets/img/HuskyWallMount-Render.png",
+    alt: "Render of finished wall mount",
+    caption: "Final render of new mount",
+  },
+];
 
+export default function DesignPage() {
   async function onSubmit(e){
     e.preventDefault();
     const form = e.currentTarget;
@@ -45,16 +60,15 @@ export default function DesignPage() {
     <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pb-24 pt-10 space-y-10">
       <section className="rounded-3xl panel p-4">
         <h3 className="text-xl font-semibold mb-3">Spotlight</h3>
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
-          {imgs.length > 0 ? (
-            imgs.map(img => (
-              <figure key={img.src} className="relative overflow-hidden rounded-2xl bubble aspect-square">
-                <Image src={img.src} alt={img.title ?? img.alt ?? 'Example'} fill className="object-cover" />
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          {SPOTLIGHT.map(step => (
+            <div key={step.src} className="text-center space-y-1">
+              <figure className="relative overflow-hidden rounded-2xl bubble aspect-square">
+                <Image src={step.src} alt={step.alt} fill className="object-cover" />
               </figure>
-            ))
-          ) : (
-            <p className="col-span-full text-center text-sm text-slate-400">No examples available.</p>
-          )}
+              <div className="text-xs text-slate-300">{step.caption}</div>
+            </div>
+          ))}
         </div>
       </section>
 
