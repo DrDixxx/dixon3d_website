@@ -42,7 +42,22 @@ export default function DesignPage() {
     }
   }
   return (
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pb-24 pt-10 space-y-10">
+    <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pb-24 pt-10 space-y-10">
+      <section className="rounded-3xl panel p-4">
+        <h3 className="text-xl font-semibold mb-3">Spotlight</h3>
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
+          {imgs.length > 0 ? (
+            imgs.map(img => (
+              <figure key={img.src} className="relative overflow-hidden rounded-2xl bubble aspect-square">
+                <Image src={img.src} alt={img.title ?? img.alt ?? 'Example'} fill className="object-cover" />
+              </figure>
+            ))
+          ) : (
+            <p className="col-span-full text-center text-sm text-slate-400">No examples available.</p>
+          )}
+        </div>
+      </section>
+
       <h2 className="text-2xl font-bold">Design Work</h2>
 
       <section className="grid md:grid-cols-2 gap-4">
@@ -76,21 +91,6 @@ export default function DesignPage() {
             <p className="text-sm mt-1">“Clear communication on limitations and material choice.”</p>
             <div className="text-xs text-slate-300 mt-2">— Chelsey S.</div>
           </article>
-        </div>
-      </section>
-
-      <section className="rounded-3xl panel p-4">
-        <h3 className="text-xl font-semibold mb-3">Work Under Review</h3>
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
-          {imgs.length > 0 ? (
-            imgs.map(img => (
-              <figure key={img.src} className="relative overflow-hidden rounded-2xl bubble aspect-square">
-                <Image src={img.src} alt={img.title ?? img.alt ?? 'Example'} fill className="object-cover" />
-              </figure>
-            ))
-          ) : (
-            <p className="col-span-full text-center text-sm text-slate-400">No examples available.</p>
-          )}
         </div>
       </section>
 
