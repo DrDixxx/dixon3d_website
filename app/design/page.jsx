@@ -7,6 +7,7 @@ const { MATERIALS, COLORS } = INV;
 const EXAMPLES = [
   {
     title: "To Replace",
+    landscape: true,
     images: [
       {
         src: "/assets/img/HuskeyWallMount-1.jpeg",
@@ -77,12 +78,12 @@ export default function DesignPage() {
         <h3 className="text-xl font-semibold mb-3">Examples</h3>
         <div className="grid sm:grid-cols-3 gap-3">
           {EXAMPLES.map(group => (
-            <fieldset key={group.title} className="rounded-2xl border border-white/20 p-2">
-              <legend className="mx-auto px-2 text-xs text-slate-300">{group.title}</legend>
-              <div className={`grid gap-3 ${group.images.length > 1 ? 'grid-cols-2' : ''}`}>
-                {group.images.map(img => (
-                  <div key={img.src} className="text-center space-y-1">
-                    <figure className="relative overflow-hidden rounded-2xl bubble aspect-square">
+          <fieldset key={group.title} className="rounded-2xl border border-white/20 p-2">
+            <legend className="mx-auto px-2 text-xs text-slate-300">{group.title}</legend>
+            <div className={`grid gap-3 ${group.images.length > 1 ? 'grid-cols-2' : ''}`}>
+              {group.images.map(img => (
+                <div key={img.src} className="text-center space-y-1">
+                    <figure className={`relative overflow-hidden rounded-2xl bubble ${group.landscape ? 'aspect-[16/9]' : 'aspect-square'}`}>
                       <Image src={img.src} alt={img.alt} fill className="object-cover" />
                     </figure>
                     <div className="text-xs text-slate-300">{img.caption}</div>
