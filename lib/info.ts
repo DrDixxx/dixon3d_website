@@ -51,6 +51,8 @@ export type NewsItem = {
   source: string;
   date: string;
   summary?: string;
+  author?: string;
+  image?: string;
 };
 
 export async function getExternalNews(): Promise<NewsItem[]> {
