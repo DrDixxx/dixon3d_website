@@ -1,0 +1,11 @@
+{
+  "title": "Heat-set inserts: hole sizes & dwell",
+  "category": "design-slicing",
+  "tags": ["fdm", "inserts", "dfam", "petg"],
+  "date": "2025-08-23",
+  "summary": "Quick chart for M3–M5 heat-sets...",
+  "hero": "/images/info/heatsets/hero.jpg",
+  "externalUrl": null,
+  "video": null,
+  "minutes": 3
+}
