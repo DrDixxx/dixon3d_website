@@ -33,8 +33,8 @@ export default function InfoFilters({ localPosts, newsItems }: Props) {
   }, [localPosts, category, query]);
 
   return (
-    <div className="space-y-10">
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+    <div className="space-y-14">
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
         <div className="flex flex-wrap gap-2">
           <button
             onClick={() => setCategory("all")}
@@ -65,7 +65,7 @@ export default function InfoFilters({ localPosts, newsItems }: Props) {
         />
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="space-y-4">
         {filtered.map((post) => (
           <InfoCard key={post.slug} {...fromLocal(post)} />
         ))}
@@ -74,7 +74,7 @@ export default function InfoFilters({ localPosts, newsItems }: Props) {
       {newsItems.length > 0 && (
         <div>
           <h2 className="text-xl font-semibold mb-4">Latest from the community</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="space-y-4">
             {newsItems.map((item) => (
               <InfoCard key={item.url} {...fromNews(item)} />
             ))}
