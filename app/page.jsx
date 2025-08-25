@@ -26,7 +26,7 @@ export default function HomePage() {
           </p>
           <div className="mt-6 flex gap-3">
             <Link href="/design" className="rounded-xl bubble px-4 py-2 text-sm font-semibold">Start a project</Link>
-            <Link href="/shop" className="rounded-xl bubble px-4 py-2 text-sm">Shop prints</Link>
+            <Link href="/shop" className="rounded-xl bubble px-4 py-2 text-sm">Shop items</Link>
           </div>
         </div>
 
@@ -112,8 +112,8 @@ export default function HomePage() {
             <article className="card rounded-2xl p-5">
               <h3 className="text-lg font-semibold">Popular Items</h3>
               <p className="mt-2 text-sm">
-                A growing catalog of useful parts—customizable materials and sizes in the{" "}
-                <Link href="/shop" className="underline">Shop</Link>.
+                A growing catalog of useful parts—customizable materials and sizes in{' '}
+                <Link href="/shop" className="underline">Shop Items</Link>.
               </p>
             </article>
           </div>
