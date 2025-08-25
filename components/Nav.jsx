@@ -37,9 +37,9 @@ export default function Nav() {
 
         <nav className="hidden md:flex flex-1 items-center justify-center gap-2">
           {tab("/", "Home")}
-          {tab("/info", "Info")}
-          {tab("/design", "Design Work")}
-          {tab("/shop", "Shop Prints")}
+          {tab("/design", "Design")}
+          {tab("/shop", "Shop Items")}
+          {tab("/info", "Knowledge")}
         </nav>
 
         <div className="ml-auto flex items-center gap-2">
@@ -68,9 +68,9 @@ export default function Nav() {
             {open && (
               <div className="absolute right-0 mt-2 w-48 rounded-md bg-header/95 backdrop-blur shadow-lg ring-1 ring-black/5 p-2 flex flex-col gap-1">
                 {tab("/", "Home")}
-                {tab("/info", "Info")}
-                {tab("/design", "Design Work")}
-                {tab("/shop", "Shop Prints")}
+                {tab("/design", "Design")}
+                {tab("/shop", "Shop Items")}
+                {tab("/info", "Knowledge")}
               </div>
             )}
           </div>

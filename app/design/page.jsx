@@ -103,7 +103,7 @@ export default function DesignPage() {
         </div>
       </section>
 
-      <h2 className="text-2xl font-bold">Design Work</h2>
+      <h2 className="text-2xl font-bold">Design</h2>
 
       <section className="grid md:grid-cols-2 gap-4">
         <article className="card rounded-2xl p-5"><h3 className="text-lg font-semibold">Consult & Design</h3><p className="mt-2 text-sm">We refine CAD, check tolerances, and plan for manufacturability.</p></article>

@@ -338,7 +338,7 @@ export default function ShopPage() {
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-24 pt-10">
       <div className="md:flex items-end justify-between gap-4 mb-6">
         <div>
-          <h2 className="text-2xl font-bold">Shop Prints</h2>
+          <h2 className="text-2xl font-bold">Shop Items</h2>
           <p className="text-slate-200">Field-tested parts & accessories. Printed to order.</p>
         </div>
         <div className="mt-4 md:mt-0 flex gap-2">
