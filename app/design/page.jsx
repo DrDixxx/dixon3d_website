@@ -74,6 +74,17 @@ export default function DesignPage() {
   }
   return (
     <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pb-24 pt-10 space-y-10">
+      <section className="space-y-4">
+        <h2 className="text-2xl font-bold">Design</h2>
+
+        <div className="grid md:grid-cols-2 gap-4">
+          <article className="card rounded-2xl p-5"><h3 className="text-lg font-semibold">Consult & Design</h3><p className="mt-2 text-sm">We refine CAD, check tolerances, and plan for manufacturability.</p></article>
+          <article className="card rounded-2xl p-5"><h3 className="text-lg font-semibold">Rapid Prototyping</h3><p className="mt-2 text-sm">Iterative prints in functional materials for quick testing.</p></article>
+          <article className="card rounded-2xl p-5"><h3 className="text-lg font-semibold">Thermoforming & Casting</h3><p className="mt-2 text-sm">Patterns and tooling appropriate for forming/casting workflows.</p></article>
+          <article className="card rounded-2xl p-5"><h3 className="text-lg font-semibold">DFAM for 3-Axis CNC</h3><p className="mt-2 text-sm">Geometries that translate cleanly to machining.</p></article>
+        </div>
+      </section>
+
       <section className="rounded-3xl panel p-4 text-center">
         <div className="grid sm:grid-cols-3 gap-3 justify-items-center">
           {EXAMPLES.map(group => (
@@ -99,42 +110,6 @@ export default function DesignPage() {
               </div>
             </fieldset>
           ))}
-        </div>
-      </section>
-
-      <h2 className="text-2xl font-bold">Design</h2>
-
-      <section className="grid md:grid-cols-2 gap-4">
-        <article className="card rounded-2xl p-5"><h3 className="text-lg font-semibold">Consult & Design</h3><p className="mt-2 text-sm">We refine CAD, check tolerances, and plan for manufacturability.</p></article>
-        <article className="card rounded-2xl p-5"><h3 className="text-lg font-semibold">Rapid Prototyping</h3><p className="mt-2 text-sm">Iterative prints in functional materials for quick testing.</p></article>
-        <article className="card rounded-2xl p-5"><h3 className="text-lg font-semibold">Thermoforming & Casting</h3><p className="mt-2 text-sm">Patterns and tooling appropriate for forming/casting workflows.</p></article>
-        <article className="card rounded-2xl p-5"><h3 className="text-lg font-semibold">DFAM for 3-Axis CNC</h3><p className="mt-2 text-sm">Geometries that translate cleanly to machining.</p></article>
-      </section>
-
-      {/* Reviews – 4 bubbles, staggered */}
-      <section className="rounded-3xl panel p-4">
-        <h3 className="text-xl font-semibold mb-3">What clients say</h3>
-        <div className="grid md:grid-cols-4 gap-3">
-          <article className="bubble rounded-2xl p-4">
-            <div className="text-yellow-300">★★★★★</div>
-            <p className="text-sm mt-1">“Fit great and slid like new!”</p>
-            <div className="text-xs text-slate-300 mt-2">— Amy D.</div>
-          </article>
-          <article className="bubble rounded-2xl p-4 md:translate-y+1">
-            <div className="text-yellow-300">★★★★★</div>
-            <p className="text-sm mt-1">“Fun ideas and gave some quick turnaround.”</p>
-            <div className="text-xs text-slate-300 mt-2">— Nate M.</div>
-          </article>
-          <article className="bubble rounded-2xl p-4 md:-translate-y-2">
-            <div className="text-yellow-300">★★★★★</div>
-            <p className="text-sm mt-1">“Perfect addition to the desk.”</p>
-            <div className="text-xs text-slate-300 mt-2">— Mark M.</div>
-          </article>
-          <article className="bubble rounded-2xl p-4 md:translate-y+3">
-            <div className="text-yellow-300">★★★★★</div>
-            <p className="text-sm mt-1">“Clear communication on limitations and material choice.”</p>
-            <div className="text-xs text-slate-300 mt-2">— Chelsey S.</div>
-          </article>
         </div>
       </section>
 
@@ -199,6 +174,33 @@ export default function DesignPage() {
             <button type="submit" className="rounded-xl bubble px-5 py-2.5 text-sm font-semibold">Submit</button>
           </div>
         </form>
+      </section>
+
+      {/* Reviews – 4 bubbles, staggered */}
+      <section className="rounded-3xl panel p-4">
+        <h3 className="text-xl font-semibold mb-3">What clients say</h3>
+        <div className="grid md:grid-cols-4 gap-3">
+          <article className="bubble rounded-2xl p-4">
+            <div className="text-yellow-300">★★★★★</div>
+            <p className="text-sm mt-1">“Fit great and slid like new!”</p>
+            <div className="text-xs text-slate-300 mt-2">— Amy D.</div>
+          </article>
+          <article className="bubble rounded-2xl p-4 md:translate-y+1">
+            <div className="text-yellow-300">★★★★★</div>
+            <p className="text-sm mt-1">“Fun ideas and gave some quick turnaround.”</p>
+            <div className="text-xs text-slate-300 mt-2">— Nate M.</div>
+          </article>
+          <article className="bubble rounded-2xl p-4 md:-translate-y-2">
+            <div className="text-yellow-300">★★★★★</div>
+            <p className="text-sm mt-1">“Perfect addition to the desk.”</p>
+            <div className="text-xs text-slate-300 mt-2">— Mark M.</div>
+          </article>
+          <article className="bubble rounded-2xl p-4 md:translate-y+3">
+            <div className="text-yellow-300">★★★★★</div>
+            <p className="text-sm mt-1">“Clear communication on limitations and material choice.”</p>
+            <div className="text-xs text-slate-300 mt-2">— Chelsey S.</div>
+          </article>
+        </div>
       </section>
     </div>
   );
