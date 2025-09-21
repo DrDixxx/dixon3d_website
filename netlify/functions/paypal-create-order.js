@@ -1,9 +1,9 @@
-﻿const { base, getAccessToken, json, round2 } = require("../../lib/paypal");
+﻿const { base, mode, getAccessToken, json, round2, describePayPalError } = require("../../lib/paypal");
 const { MATERIALS, COLORS } = require("../../lib/inventory.json");
 
 exports.handler = async (event) => {
   if (event.httpMethod === "GET") {
-    return json(200, { envPresent: true, mode: base.includes("sandbox") ? "sandbox" : "live" });
+    return json(200, { envPresent: true, mode });
   }
 
   // Create a unique invoice id up-front
@@ -80,20 +80,34 @@ exports.handler = async (event) => {
     });
 
     const order = await res.json();
+    if (!res.ok) {
+      return json(res.status || 500, {
+        error: describePayPalError(order),
+        details: order,
+      });
+    }
+
     const approve = (order.links || []).find((l) => l.rel === "approve")?.href;
+    if (!approve) {
+      return json(500, {
+        error: "PayPal order missing approval link",
+        details: order,
+      });
+    }
 
     // Prefer PayPal's echoed invoice_id; fall back to ours
     const returnedInvoiceId =
       order.purchase_units?.[0]?.invoice_id || invoiceId;
 
-    return json(
-      res.ok ? 200 : 500,
-      approve
-        ? { id: order.id, approve, invoiceId: returnedInvoiceId }
-        : { error: order }
-    );
+    return json(200, {
+      id: order.id,
+      approve,
+      invoiceId: returnedInvoiceId,
+    });
   } catch (e) {
-    return json(500, { error: String(e) });
+    return json(500, { error: e instanceof Error ? e.message : String(e) });
   }
 };
+
+
 
