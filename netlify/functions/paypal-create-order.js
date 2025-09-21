@@ -1,9 +1,9 @@
-const { base, getAccessToken, json, round2 } = require("./paypal-utils");
+﻿const { base, getAccessToken, json, round2 } = require("../../lib/paypal");
 const { MATERIALS, COLORS } = require("../../lib/inventory.json");
 
 exports.handler = async (event) => {
   if (event.httpMethod === "GET") {
-    return json(200, { envPresent: true, mode: "sandbox" });
+    return json(200, { envPresent: true, mode: base.includes("sandbox") ? "sandbox" : "live" });
   }
 
   // Create a unique invoice id up-front
@@ -27,7 +27,7 @@ exports.handler = async (event) => {
       const price = Number(i.price || 0);
       const qty = Number(i.qty || 1);
 
-      const desc = `Color: ${color} • Material: ${material} • Fin: ${finish} • Scale: ${scale}%`.slice(0, 127);
+      const desc = `Color: ${color} â€¢ Material: ${material} â€¢ Fin: ${finish} â€¢ Scale: ${scale}%`.slice(0, 127);
       const name = `${i.name} (${material}, ${color})`.slice(0, 127);
 
       return {
@@ -96,3 +96,4 @@ exports.handler = async (event) => {
     return json(500, { error: String(e) });
   }
 };
+

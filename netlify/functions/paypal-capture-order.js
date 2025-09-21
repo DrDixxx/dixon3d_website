@@ -1,4 +1,4 @@
-const { base, getAccessToken, round2, json } = require("./paypal-utils");
+﻿const { base, getAccessToken, round2, json } = require("../../lib/paypal");
 
 exports.handler = async (event) => {
   try {
@@ -62,3 +62,4 @@ exports.handler = async (event) => {
     return json(500, { error: String(e) });
   }
 };
+
