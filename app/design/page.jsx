@@ -74,11 +74,10 @@ export default function DesignPage() {
   }
   return (
     <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pb-24 pt-10 space-y-10">
-      <section className="rounded-3xl panel p-4">
-        <h3 className="text-xl font-semibold mb-3">Examples</h3>
-        <div className="grid sm:grid-cols-3 gap-3">
+      <section className="rounded-3xl panel p-4 text-center">
+        <div className="grid sm:grid-cols-3 gap-3 justify-items-center">
           {EXAMPLES.map(group => (
-          <fieldset key={group.title} className="rounded-2xl border border-white/20 p-2">
+          <fieldset key={group.title} className="w-full rounded-2xl border border-white/20 p-2">
             <legend className="mx-auto px-2 text-xs text-slate-300">{group.title}</legend>
             <div className="grid gap-3">
               {group.images.map(img => (
