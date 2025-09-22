@@ -1,13 +1,10 @@
-﻿const { base, mode, clientId, secret, json } = require("../../lib/paypal");
+﻿const { base, mode, clientIdSuffix, secret, json } = require("../../lib/paypal");
 
 exports.handler = async () => {
-  const clientIdSuffix = clientId ? clientId.slice(-6) : null;
-  const hasSecret = Boolean(secret);
-
   return json(200, {
     base,
     mode,
-    clientIdSuffix,
-    hasSecret,
+    clientIdSuffix: clientIdSuffix || null,
+    hasSecret: Boolean(secret),
   });
 };

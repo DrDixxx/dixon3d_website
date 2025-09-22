@@ -1,4 +1,4 @@
-[build]
+﻿[build]
   command = "npm run build"
   publish = ".next"
 
@@ -14,6 +14,11 @@
 [[redirects]]
   from = "/api/paypal/capture"
   to   = "/.netlify/functions/paypal-capture-order"
+  status = 200
+
+[[redirects]]
+  from = "/api/paypal/health"
+  to   = "/.netlify/functions/paypal-health"
   status = 200
 
 [[redirects]]

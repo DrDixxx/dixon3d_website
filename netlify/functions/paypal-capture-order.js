@@ -1,9 +1,13 @@
-﻿const { base, getAccessToken, round2, json, describePayPalError } = require("../../lib/paypal");
+﻿const { base, mode, clientIdSuffix, getAccessToken, round2, json, describePayPalError } = require("../../lib/paypal");
 
 exports.handler = async (event) => {
+  const diag = { mode, base, clientIdSuffix };
+
   try {
     const orderId = event.queryStringParameters?.token || event.queryStringParameters?.order_id;
-    if (!orderId) return json(400, { error: "Missing order id" });
+    if (!orderId) {
+      return json(400, { error: "Missing order id", diag });
+    }
 
     const token = await getAccessToken();
 
@@ -15,6 +19,7 @@ exports.handler = async (event) => {
       return json(res.status || 500, {
         error: describePayPalError(order),
         details: order,
+        diag,
       });
     }
 
@@ -79,10 +84,11 @@ exports.handler = async (event) => {
       return json(res.status || 500, {
         error: describePayPalError(capture),
         details: capture,
+        diag,
       });
     }
     return json(200, capture);
   } catch (e) {
-    return json(500, { error: e instanceof Error ? e.message : String(e) });
+    return json(500, { error: e instanceof Error ? e.message : String(e), diag });
   }
 };

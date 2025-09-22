@@ -1,10 +1,12 @@
-﻿const { base, mode, getAccessToken, json, round2, describePayPalError } = require("../../lib/paypal");
+﻿const { base, mode, clientIdSuffix, getAccessToken, json, round2, describePayPalError } = require("../../lib/paypal");
 const { MATERIALS, COLORS } = require("../../lib/inventory.json");
 
 exports.handler = async (event) => {
   if (event.httpMethod === "GET") {
     return json(200, { envPresent: true, mode });
   }
+
+  const diag = { mode, base, clientIdSuffix };
 
   // Create a unique invoice id up-front
   const invoiceId = `INV-${Date.now()}`;
@@ -27,7 +29,7 @@ exports.handler = async (event) => {
       const price = Number(i.price || 0);
       const qty = Number(i.qty || 1);
 
-      const desc = `Color: ${color} â€¢ Material: ${material} â€¢ Fin: ${finish} â€¢ Scale: ${scale}%`.slice(0, 127);
+      const desc = `Color: ${color} | Material: ${material} | Fin: ${finish} | Scale: ${scale}%`.slice(0, 127);
       const name = `${i.name} (${material}, ${color})`.slice(0, 127);
 
       return {
@@ -84,6 +86,7 @@ exports.handler = async (event) => {
       return json(res.status || 500, {
         error: describePayPalError(order),
         details: order,
+        diag,
       });
     }
 
@@ -92,6 +95,7 @@ exports.handler = async (event) => {
       return json(500, {
         error: "PayPal order missing approval link",
         details: order,
+        diag,
       });
     }
 
@@ -105,9 +109,9 @@ exports.handler = async (event) => {
       invoiceId: returnedInvoiceId,
     });
   } catch (e) {
-    return json(500, { error: e instanceof Error ? e.message : String(e) });
+    return json(500, {
+      error: e instanceof Error ? e.message : String(e),
+      diag,
+    });
   }
 };
-
-
-
