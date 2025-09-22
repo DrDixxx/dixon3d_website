@@ -17,7 +17,7 @@ exports.handler = async (event) => {
   }
 
   const clientIdSuffix = clientId ? clientId.slice(-6) : null;
-  const diag = { mode, base, clientIdSuffix };
+  const defaultDiag = { mode, base, clientIdSuffix };
 
   // Create a unique invoice id up-front
   const invoiceId = `INV-${Date.now()}`;
@@ -96,14 +96,14 @@ exports.handler = async (event) => {
     if (!res.ok) {
       return json(res.status || 500, {
         error: describePayPalError(order),
-        diag,
+        diag: defaultDiag,
       });
     }
 
     if (!order || typeof order !== "object") {
       return json(500, {
         error: "Unexpected PayPal response",
-        diag,
+        diag: defaultDiag,
       });
     }
 
@@ -111,7 +111,7 @@ exports.handler = async (event) => {
     if (!approve) {
       return json(500, {
         error: "PayPal order missing approval link",
-        diag,
+        diag: defaultDiag,
       });
     }
 
@@ -125,6 +125,7 @@ exports.handler = async (event) => {
       invoiceId: returnedInvoiceId,
     });
   } catch (e) {
+    const diag = e && typeof e === "object" && e.diag ? e.diag : defaultDiag;
     return json(500, {
       error: e instanceof Error ? e.message : String(e),
       diag,

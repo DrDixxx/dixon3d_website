@@ -16,12 +16,12 @@ const readPayPalResponse = async (response) => {
 
 exports.handler = async (event) => {
   const clientIdSuffix = clientId ? clientId.slice(-6) : null;
-  const diag = { mode, base, clientIdSuffix };
+  const defaultDiag = { mode, base, clientIdSuffix };
 
   try {
     const orderId = event.queryStringParameters?.token || event.queryStringParameters?.order_id;
     if (!orderId) {
-      return json(400, { error: "Missing order id", diag });
+      return json(400, { error: "Missing order id", diag: defaultDiag });
     }
 
     const token = await getAccessToken();
@@ -33,12 +33,12 @@ exports.handler = async (event) => {
     if (!res.ok) {
       return json(res.status || 500, {
         error: describePayPalError(orderPayload),
-        diag,
+        diag: defaultDiag,
       });
     }
 
     if (!orderPayload || typeof orderPayload !== "object") {
-      return json(500, { error: "Unexpected PayPal response", diag });
+      return json(500, { error: "Unexpected PayPal response", diag: defaultDiag });
     }
 
     const order = orderPayload;
@@ -82,12 +82,22 @@ exports.handler = async (event) => {
       if (!res.ok) {
         const payload = safeParse(await res.text());
         const described = describePayPalError(payload || res.statusText);
-        const summaryParts = [];
-        if (described.name) summaryParts.push(described.name);
-        if (described.message) summaryParts.push(described.message);
-        if (described.debug_id) summaryParts.push(`debug_id=${described.debug_id}`);
-        const summary = summaryParts.join(" | ") || (typeof payload === "string" ? payload : "Unknown PayPal error");
-        throw new Error(`PayPal patch failed (${res.status || "unknown"}): ${summary}`);
+        const parts = [];
+        if (described.name) parts.push(described.name);
+        if (described.message) parts.push(described.message);
+        if (described.debug_id) parts.push(`debug_id=${described.debug_id}`);
+        if (described.issue?.issue) parts.push(`issue=${described.issue.issue}`);
+        const summary =
+          parts.join(" | ") ||
+          (typeof payload === "string" ? payload : "Unknown PayPal error");
+        const err = new Error(
+          `PayPal patch failed (${res.status || "unknown"}): ${summary}`
+        );
+        err.diag = defaultDiag;
+        if (payload && typeof payload === "object") {
+          err.payload = payload;
+        }
+        throw err;
       }
     }
 
@@ -103,16 +113,17 @@ exports.handler = async (event) => {
     if (!res.ok) {
       return json(res.status || 500, {
         error: describePayPalError(capture),
-        diag,
+        diag: defaultDiag,
       });
     }
 
     if (!capture || typeof capture !== "object") {
-      return json(500, { error: "Unexpected PayPal response", diag });
+      return json(500, { error: "Unexpected PayPal response", diag: defaultDiag });
     }
 
     return json(200, capture);
   } catch (e) {
+    const diag = e && typeof e === "object" && e.diag ? e.diag : defaultDiag;
     return json(500, { error: e instanceof Error ? e.message : String(e), diag });
   }
 };
