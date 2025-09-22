@@ -1,11 +1,22 @@
-﻿const { base, mode, clientIdSuffix, getAccessToken, json, round2, describePayPalError } = require("../../lib/paypal");
+const { base, mode, clientId, getAccessToken, json, round2, describePayPalError } = require("../../lib/paypal");
 const { MATERIALS, COLORS } = require("../../lib/inventory.json");
+
+const readPayPalResponse = async (response) => {
+  const text = await response.text();
+  if (!text) return undefined;
+  try {
+    return JSON.parse(text);
+  } catch (_) {
+    return text;
+  }
+};
 
 exports.handler = async (event) => {
   if (event.httpMethod === "GET") {
     return json(200, { envPresent: true, mode });
   }
 
+  const clientIdSuffix = clientId ? clientId.slice(-6) : null;
   const diag = { mode, base, clientIdSuffix };
 
   // Create a unique invoice id up-front
@@ -81,11 +92,17 @@ exports.handler = async (event) => {
       body: JSON.stringify(payload),
     });
 
-    const order = await res.json();
+    const order = await readPayPalResponse(res);
     if (!res.ok) {
       return json(res.status || 500, {
         error: describePayPalError(order),
-        details: order,
+        diag,
+      });
+    }
+
+    if (!order || typeof order !== "object") {
+      return json(500, {
+        error: "Unexpected PayPal response",
         diag,
       });
     }
@@ -94,7 +111,6 @@ exports.handler = async (event) => {
     if (!approve) {
       return json(500, {
         error: "PayPal order missing approval link",
-        details: order,
         diag,
       });
     }

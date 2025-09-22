@@ -1,6 +1,21 @@
-﻿const { base, mode, clientIdSuffix, getAccessToken, round2, json, describePayPalError } = require("../../lib/paypal");
+const { base, mode, clientId, getAccessToken, round2, json, describePayPalError } = require("../../lib/paypal");
+
+const safeParse = (text) => {
+  if (!text) return undefined;
+  try {
+    return JSON.parse(text);
+  } catch (_) {
+    return text;
+  }
+};
+
+const readPayPalResponse = async (response) => {
+  const text = await response.text();
+  return safeParse(text);
+};
 
 exports.handler = async (event) => {
+  const clientIdSuffix = clientId ? clientId.slice(-6) : null;
   const diag = { mode, base, clientIdSuffix };
 
   try {
@@ -14,15 +29,19 @@ exports.handler = async (event) => {
     let res = await fetch(`${base}/v2/checkout/orders/${orderId}`, {
       headers: { Authorization: `Bearer ${token}` },
     });
-    const order = await res.json();
+    const orderPayload = await readPayPalResponse(res);
     if (!res.ok) {
       return json(res.status || 500, {
-        error: describePayPalError(order),
-        details: order,
+        error: describePayPalError(orderPayload),
         diag,
       });
     }
 
+    if (!orderPayload || typeof orderPayload !== "object") {
+      return json(500, { error: "Unexpected PayPal response", diag });
+    }
+
+    const order = orderPayload;
     const pu = order.purchase_units?.[0] || {};
     const item_total = parseFloat(
       pu.amount?.breakdown?.item_total?.value || pu.amount?.value || "0"
@@ -61,13 +80,14 @@ exports.handler = async (event) => {
         body: JSON.stringify(patchBody),
       });
       if (!res.ok) {
-        const text = await res.text();
-        let payload;
-        try {
-          payload = text ? JSON.parse(text) : undefined;
-        } catch (_) {}
-        const message = describePayPalError(payload || text || res.statusText);
-        throw new Error(`PayPal patch failed (${res.status}): ${message}`);
+        const payload = safeParse(await res.text());
+        const described = describePayPalError(payload || res.statusText);
+        const summaryParts = [];
+        if (described.name) summaryParts.push(described.name);
+        if (described.message) summaryParts.push(described.message);
+        if (described.debug_id) summaryParts.push(`debug_id=${described.debug_id}`);
+        const summary = summaryParts.join(" | ") || (typeof payload === "string" ? payload : "Unknown PayPal error");
+        throw new Error(`PayPal patch failed (${res.status || "unknown"}): ${summary}`);
       }
     }
 
@@ -79,14 +99,18 @@ exports.handler = async (event) => {
       },
       body: "{}",
     });
-    const capture = await res.json();
+    const capture = await readPayPalResponse(res);
     if (!res.ok) {
       return json(res.status || 500, {
         error: describePayPalError(capture),
-        details: capture,
         diag,
       });
     }
+
+    if (!capture || typeof capture !== "object") {
+      return json(500, { error: "Unexpected PayPal response", diag });
+    }
+
     return json(200, capture);
   } catch (e) {
     return json(500, { error: e instanceof Error ? e.message : String(e), diag });

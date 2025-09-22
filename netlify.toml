@@ -22,6 +22,11 @@
   status = 200
 
 [[redirects]]
+  from = "/api/paypal/auth-check"
+  to   = "/.netlify/functions/paypal-auth-check"
+  status = 200
+
+[[redirects]]
   from = "/api/design-request"
   to   = "/.netlify/functions/design-request"
   status = 200
