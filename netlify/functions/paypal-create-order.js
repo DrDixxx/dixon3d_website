@@ -1,10 +1,23 @@
-const { base, getAccessToken, json, round2 } = require("./paypal-utils");
+const { base, mode, clientId, getAccessToken, json, round2, describePayPalError } = require("../../lib/paypal");
 const { MATERIALS, COLORS } = require("../../lib/inventory.json");
+
+const readPayPalResponse = async (response) => {
+  const text = await response.text();
+  if (!text) return undefined;
+  try {
+    return JSON.parse(text);
+  } catch (_) {
+    return text;
+  }
+};
 
 exports.handler = async (event) => {
   if (event.httpMethod === "GET") {
-    return json(200, { envPresent: true, mode: "sandbox" });
+    return json(200, { envPresent: true, mode });
   }
+
+  const clientIdSuffix = clientId ? clientId.slice(-6) : null;
+  const defaultDiag = { mode, base, clientIdSuffix };
 
   // Create a unique invoice id up-front
   const invoiceId = `INV-${Date.now()}`;
@@ -27,7 +40,7 @@ exports.handler = async (event) => {
       const price = Number(i.price || 0);
       const qty = Number(i.qty || 1);
 
-      const desc = `Color: ${color} • Material: ${material} • Fin: ${finish} • Scale: ${scale}%`.slice(0, 127);
+      const desc = `Color: ${color} | Material: ${material} | Fin: ${finish} | Scale: ${scale}%`.slice(0, 127);
       const name = `${i.name} (${material}, ${color})`.slice(0, 127);
 
       return {
@@ -79,20 +92,43 @@ exports.handler = async (event) => {
       body: JSON.stringify(payload),
     });
 
-    const order = await res.json();
+    const order = await readPayPalResponse(res);
+    if (!res.ok) {
+      return json(res.status || 500, {
+        error: describePayPalError(order),
+        diag: defaultDiag,
+      });
+    }
+
+    if (!order || typeof order !== "object") {
+      return json(500, {
+        error: "Unexpected PayPal response",
+        diag: defaultDiag,
+      });
+    }
+
     const approve = (order.links || []).find((l) => l.rel === "approve")?.href;
+    if (!approve) {
+      return json(500, {
+        error: "PayPal order missing approval link",
+        diag: defaultDiag,
+      });
+    }
 
     // Prefer PayPal's echoed invoice_id; fall back to ours
     const returnedInvoiceId =
       order.purchase_units?.[0]?.invoice_id || invoiceId;
 
-    return json(
-      res.ok ? 200 : 500,
-      approve
-        ? { id: order.id, approve, invoiceId: returnedInvoiceId }
-        : { error: order }
-    );
+    return json(200, {
+      id: order.id,
+      approve,
+      invoiceId: returnedInvoiceId,
+    });
   } catch (e) {
-    return json(500, { error: String(e) });
+    const diag = e && typeof e === "object" && e.diag ? e.diag : defaultDiag;
+    return json(500, {
+      error: e instanceof Error ? e.message : String(e),
+      diag,
+    });
   }
 };

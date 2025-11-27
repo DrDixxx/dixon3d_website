@@ -1,0 +1,15 @@
+name = "design-intake"
+main = "src/index.ts"
+compatibility_date = "2024-12-01"
+
+[vars]
+PUBLIC_BASE_URL = "https://api.sandbox.dixon3d.com"
+
+[[r2_buckets]]
+binding = "R2_BUCKET"
+bucket_name = "dixon3d-uploads-sandbox"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "dixon3d_tickets_sandbox"
+database_id = "D1_SANDBOX_ID_PLACEHOLDER"

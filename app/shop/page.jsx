@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
@@ -83,6 +83,29 @@ export default function ShopPage() {
   const [search, setSearch] = useState("");
   const paypalClientId = process.env.NEXT_PUBLIC_PAYPAL_ID; // set via env, sandbox for testing
 
+  const formatPayPalError = (payload, fallback) => {
+    const value = payload?.error ?? payload;
+    if (!value) return fallback;
+    if (typeof value === "string") return value;
+    if (typeof value === "object") {
+      if (typeof value.error === "string") return value.error;
+      if (value.error_description) return value.error_description;
+      if (value.message) return value.message;
+      if (Array.isArray(value.details) && value.details.length) {
+        const combined = value.details
+          .map((detail) => detail?.description || detail?.message || detail?.issue)
+          .filter(Boolean)
+          .join("; ");
+        if (combined) return combined;
+      }
+    }
+    try {
+      return JSON.stringify(value);
+    } catch (_) {
+      return fallback;
+    }
+  };
+
   useEffect(() => { try { setCart(JSON.parse(localStorage.getItem(CART_KEY) || "[]")); } catch {} }, []);
   useEffect(() => { localStorage.setItem(CART_KEY, JSON.stringify(cart)); }, [cart]);
 
@@ -124,8 +147,9 @@ export default function ShopPage() {
             });
             const data = await res.json();
             if (!res.ok || !data.id) {
-              alert(data.error || "Payment setup error");
-              throw new Error("PayPal order creation failed");
+              const message = formatPayPalError(data, "Payment setup error");
+              alert(message);
+              throw new Error(message || "PayPal order creation failed");
             }
             return data.id;
           },
@@ -139,8 +163,9 @@ export default function ShopPage() {
               localStorage.setItem(CART_KEY, "[]");
               window.location.href = "/thank-you";
             } else {
-              alert(capture?.error || "Payment error");
-              throw new Error("PayPal capture failed");
+              const message = formatPayPalError(capture, "Payment error");
+              alert(message);
+              throw new Error(message || "PayPal capture failed");
             }
           }
         })
@@ -183,14 +208,14 @@ export default function ShopPage() {
                     className="absolute left-1 top-1/2 -translate-y-1/2 bg-black/40 text-white text-xs rounded-full w-6 h-6"
                     aria-label="Previous image"
                   >
-                    ‹
+                    â€¹
                   </button>
                   <button
                     onClick={() => setImg((img + 1) % imgs.length)}
                     className="absolute right-1 top-1/2 -translate-y-1/2 bg-black/40 text-white text-xs rounded-full w-6 h-6"
                     aria-label="Next image"
                   >
-                    ›
+                    â€º
                   </button>
                 </>
               )}
@@ -327,7 +352,7 @@ export default function ShopPage() {
         const approveUrl = data.approve + (data.approve.includes("?") ? "&" : "?") + "disable-funding=paylater";
         window.location.href = approveUrl;
       } else {
-        alert(data.error || "Payment error");
+        alert(formatPayPalError(data, "Payment error"));
       }
     } catch (e) {
       alert(String(e));
@@ -343,7 +368,7 @@ export default function ShopPage() {
         </div>
         <div className="mt-4 md:mt-0 flex gap-2">
           <input value={search} onChange={e=>setSearch(e.target.value)}
-                 placeholder="Search…" className="w-56 rounded-xl input-soft px-3 py-2 text-sm"/>
+                 placeholder="Searchâ€¦" className="w-56 rounded-xl input-soft px-3 py-2 text-sm"/>
         </div>
       </div>
 
@@ -365,7 +390,7 @@ export default function ShopPage() {
               <div className="w-12 h-12 rounded-lg bg-slate-100 ring-1 ring-black/10" />
               <div className="grow">
                 <div className="font-medium">{it.name}</div>
-                <div className="text-xs text-slate-500">{money(it.price)} • {it.color} • {it.material} • {it.scale}% • {it.finish}</div>
+                <div className="text-xs text-slate-500">{money(it.price)} â€¢ {it.color} â€¢ {it.material} â€¢ {it.scale}% â€¢ {it.finish}</div>
                 <div className="mt-2 flex items-center gap-2">
                   <input type="number" min="1" value={it.qty}
                          onChange={(e)=>updateQty(it.key, parseInt(e.target.value||"1",10))}
@@ -385,3 +410,6 @@ export default function ShopPage() {
     </div>
   );
 }
+
+
+

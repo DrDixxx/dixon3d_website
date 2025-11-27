@@ -1,64 +1,50 @@
-const { base, getAccessToken, round2, json } = require("./paypal-utils");
+﻿const { base, getAccessToken, json } = require("../../lib/paypal");
 
 exports.handler = async (event) => {
   try {
-    const orderId = event.queryStringParameters?.token || event.queryStringParameters?.order_id;
+    const orderId =
+      event.queryStringParameters?.token || event.queryStringParameters?.order_id;
     if (!orderId) return json(400, { error: "Missing order id" });
 
     const token = await getAccessToken();
 
+    // 1) Fetch order (for visibility + sanity)
     let res = await fetch(`${base}/v2/checkout/orders/${orderId}`, {
-      headers: { Authorization: `Bearer ${token}` }
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
     });
-    let order = await res.json();
-    if (!res.ok) return json(res.status, order);
-
-    const pu = order.purchase_units?.[0] || {};
-    const item_total = parseFloat(pu.amount?.breakdown?.item_total?.value || pu.amount?.value || "0");
-    let tax_total = 0;
-    const addr = pu.shipping?.address;
-    if (addr) {
-      const state = addr.admin_area_1;
-      const country = addr.country_code;
-      const rate = country === "US" && state === "CO" ? 0.029 : 0;
-      tax_total = round2(item_total * rate);
-      const path = pu.reference_id
-        ? `/purchase_units/@reference_id=='${pu.reference_id}'/amount`
-        : "/purchase_units/0/amount";
-      const value = (item_total + tax_total).toFixed(2);
-      const patchBody = [
-        {
-          op: "replace",
-          path,
-          value: {
-            currency_code: "USD",
-            value,
-            breakdown: {
-              item_total: { currency_code: "USD", value: item_total.toFixed(2) },
-              tax_total: { currency_code: "USD", value: tax_total.toFixed(2) }
-            }
-          }
-        }
-      ];
-      res = await fetch(`${base}/v2/checkout/orders/${orderId}`, {
-        method: "PATCH",
-        headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
-        body: JSON.stringify(patchBody)
+    const order = await res.json();
+    if (!res.ok) {
+      return json(res.status || 500, {
+        error: order?.name || order?.message || "PayPal order lookup failed",
+        debug_id: order?.debug_id,
+        details: order,
       });
-      if (!res.ok) {
-        const txt = await res.text();
-        throw new Error(`PayPal patch failed (${res.status}): ${txt}`);
-      }
     }
 
+    // 2) Capture order
     res = await fetch(`${base}/v2/checkout/orders/${orderId}/capture`, {
       method: "POST",
-      headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
-      body: "{}"
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+        "PayPal-Request-Id": orderId, // idempotency; ok to keep
+      },
+      body: "{}",
     });
     const capture = await res.json();
-    return json(res.ok ? 200 : 500, capture);
+    if (!res.ok) {
+      return json(res.status || 500, {
+        error: capture?.name || capture?.message || "PayPal capture failed",
+        debug_id: capture?.debug_id,
+        details: capture,
+      });
+    }
+
+    return json(200, capture);
   } catch (e) {
-    return json(500, { error: String(e) });
+    return json(500, { error: e instanceof Error ? e.message : String(e) });
   }
 };
