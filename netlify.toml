@@ -33,8 +33,3 @@
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"
-
-[[redirects]]
-  from = "/api/paypal/debug-order"
-  to   = "/.netlify/functions/paypal-debug-order"
-  status = 200
