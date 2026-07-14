@@ -4,10 +4,10 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 import type { InfoPost } from "../../../lib/info";
 
-interface Params { params: { slug: string } }
+interface Params { params: Promise<{ slug: string }> }
 
 export default async function InfoPostPage({ params }: Params) {
-  const { slug } = params;
+  const { slug } = await params;
   const file = path.join(process.cwd(), "content/info", `${slug}.json`);
   let data: InfoPost;
   try {
