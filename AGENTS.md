@@ -2,7 +2,7 @@
 
 ## Project state
 
-Dixon3D is a Next.js 14 website for a small 3D-printing and engineering-design business. The live site is currently deployed through Netlify. Cloudflare manages the domain. The repository contains unfinished PayPal, SMTP inquiry, and experimental Cloudflare intake code.
+Dixon3D is a Next.js 15 website for a small 3D-printing and engineering-design business. The live site is currently deployed through Netlify. Cloudflare manages the domain. The repository contains unfinished PayPal, SMTP inquiry, and experimental Cloudflare intake code.
 
 ## Default operating mode
 
@@ -18,10 +18,10 @@ For each task:
 6. Review the diff.
 7. Commit with a clear conventional commit message.
 8. Push the task branch when authentication permits.
-9. Open or update a draft pull request when requested or when the task is implementation-ready.
+9. Open/update the pull request, verify the Netlify preview and relevant checks, and merge low-risk, fully validated changes using the owner's standing release authorization.
 10. Provide a completion report using the required format below.
 
-Do not ask for approval for ordinary read-only commands, local builds, dependency installation from the existing lockfile, or edits within the active task branch. Ask before destructive Git operations, production deployments, external-account changes, payments, customer communications, or access to secrets.
+Do not ask for approval for ordinary read-only commands, local builds, dependency installation from the existing lockfile, or edits within the active task branch. Ask before destructive Git operations, backend/security/payment changes, external-account changes, customer communications, or access to secrets. Routine tested source pushes, PR merges and static UI deployments are covered by the owner's standing 2026-11-25 authorization.
 
 ## Git rules
 
@@ -29,7 +29,7 @@ Do not ask for approval for ordinary read-only commands, local builds, dependenc
 - Begin from the latest approved base branch.
 - Use one branch per coherent task.
 - Prefer branch names such as `chore/...`, `fix/...`, `feat/...`, or `docs/...`.
-- Do not merge, rebase, reset, force-push, delete branches, or rewrite history without explicit authorization.
+- The owner authorizes routine verified low-risk PR merges, static portfolio/UI releases, and code pushes as of 2026-11-25. Do not reset, force-push, delete branches, rewrite history or bypass branch protection without separate approval.
 - Keep unrelated changes out of the same branch.
 - Preserve a clean working tree at task completion.
 
@@ -37,7 +37,7 @@ Do not ask for approval for ordinary read-only commands, local builds, dependenc
 
 Do not perform any of the following without explicit authorization:
 
-- Deploy to production.
+- Deploy unverified or backend-sensitive production changes. Routine static/site UI updates with successful preview and preserved rollback are preauthorized.
 - Change Netlify, Cloudflare, DNS, PayPal, SMTP, GitHub, or email settings.
 - Send customer email or submit production forms.
 - Create, authorize, capture, refund, or inspect real payment transactions.
@@ -45,6 +45,10 @@ Do not perform any of the following without explicit authorization:
 - Upload private customer files or personal information.
 
 Environment-variable names may be documented. Values must remain private.
+
+## Ship-to-done workflow
+
+The owner expects the agent to complete implementation, validation, push, PR, safe merge and release in one execution whenever possible; do not stop at a local clean branch or request repeated intermediate reviews. Resume previous work instead of creating redundant audits. If the task is blocked by an external approval or unavailable resource, do the next independent high-value task and report only a precise genuine dependency. Never claim a build, deployment or customer flow is successful without observing evidence. Customer data, payments, proprietary assets and unverified safety boundaries are outside this standing authorization.
 
 ## Current known risks
 
@@ -59,8 +63,8 @@ Environment-variable names may be documented. Values must remain private.
 
 - Node.js: 22.x
 - npm
-- Next.js 14.2.5
-- React 18.3.1
+- Next.js 15.5.20
+- React 19.2.7
 - Netlify deployment
 - Netlify Functions
 - Nodemailer SMTP
