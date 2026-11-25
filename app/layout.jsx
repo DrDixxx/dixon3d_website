@@ -4,7 +4,7 @@ import Footer from "../components/Footer";
 
 export const metadata = {
   title: "Dixon 3D",
-  description: "Precision additive manufacturing for real-world parts.",
+  description: "Mechanical design, functional prototypes, custom parts, and practical engineering support for product and manufacturing challenges.",
   icons: {
     icon: "/assets/img/D3D_Logo.png",
     shortcut: "/assets/img/D3D_Logo.png",

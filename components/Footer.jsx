@@ -8,7 +8,7 @@ export default function Footer() {
           <a href="/shop" className="hover:underline">Shop Items</a>
           <a href="/" className="hover:underline">Home</a>
         </div>
-        <div className="absolute left-1/2 -translate-x-1/2 text-xs text-slate-400">Enhanced with GPT-5</div>
+        
       </div>
     </footer>
   );
