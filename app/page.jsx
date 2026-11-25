@@ -71,6 +71,16 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* EVIDENCE-BACKED ENGINEERING PORTFOLIO */}
+      <section className="flex flex-wrap items-center justify-between gap-4 rounded-3xl panel p-6">
+        <div className="max-w-2xl">
+          <p className="text-xs font-semibold uppercase tracking-wider text-sky-200">Project documentation</p>
+          <h2 className="mt-2 text-2xl font-semibold text-white">See the design work behind the parts</h2>
+          <p className="mt-2 text-sm leading-6 text-slate-200">Review engineering drawings, CAD renders, and printed-part examples with links to the underlying visual evidence.</p>
+        </div>
+        <Link href="/portfolio" className="rounded-xl bubble px-4 py-2 text-sm font-semibold">View portfolio</Link>
+      </section>
+
       {/* WHAT WE DO — Row 1 */}
       <section className="space-y-4">
         <div className="rounded-3xl panel p-3">
@@ -107,7 +117,7 @@ export default function HomePage() {
             </article>
             <article className="card rounded-2xl p-5">
               <h3 className="text-lg font-semibold">Standard Tolerances</h3>
-              <p className="mt-2 text-sm">± 0.01–0.001 in. depending on production and finish.</p>
+              <p className="mt-2 text-sm">Tolerances depend on the geometry, material, process and inspection method; project requirements are confirmed before manufacture.</p>
             </article>
             <article className="card rounded-2xl p-5">
               <h3 className="text-lg font-semibold">Popular Items</h3>
