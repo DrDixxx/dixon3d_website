@@ -19,14 +19,14 @@ export default function HomePage() {
       <section className="relative overflow-hidden rounded-3xl panel-inverse p-8 sm:p-12">
         <div className="relative z-10">
           <h1 className="text-3xl sm:text-5xl font-extrabold text-white">
-            Precision additive manufacturing for real-world parts.
+            Engineering design and prototyping for real-world problems.
           </h1>
           <p className="mt-4 max-w-2xl text-slate-200">
-            Design, prototype, and produce—with a growing catalog of popular items.
+            Dixon3D helps businesses and product developers turn technical requirements into practical CAD, functional prototypes, and manufacturing decisions.
           </p>
           <div className="mt-6 flex gap-3">
-            <Link href="/design" className="rounded-xl bubble px-4 py-2 text-sm font-semibold">Start a project</Link>
-            <Link href="/shop" className="rounded-xl bubble px-4 py-2 text-sm">Shop items</Link>
+            <Link href="/design" className="rounded-xl bubble px-4 py-2 text-sm font-semibold">Discuss a project</Link>
+            <Link href="/portfolio" className="rounded-xl bubble px-4 py-2 text-sm">Our capabilities</Link>
           </div>
         </div>
 
@@ -71,62 +71,36 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* EVIDENCE-BACKED ENGINEERING PORTFOLIO */}
-      <section className="flex flex-wrap items-center justify-between gap-4 rounded-3xl panel p-6">
-        <div className="max-w-2xl">
-          <p className="text-xs font-semibold uppercase tracking-wider text-sky-200">Project documentation</p>
-          <h2 className="mt-2 text-2xl font-semibold text-white">See the design work behind the parts</h2>
-          <p className="mt-2 text-sm leading-6 text-slate-200">Review engineering drawings, CAD renders, and printed-part examples with links to the underlying visual evidence.</p>
+      {/* ENGINEERING VALUE */}
+      <section className="flex flex-wrap items-center justify-between gap-5 rounded-3xl panel p-6 sm:p-8">
+        <div className="max-w-3xl">
+          <p className="text-xs font-semibold uppercase tracking-wider text-sky-200">Engineering & development</p>
+          <h2 className="mt-2 text-2xl font-semibold text-white">From a technical challenge to a workable next step</h2>
+          <p className="mt-3 text-sm leading-7 text-slate-200">
+            Mechanical design, functional prototyping, additive manufacturing and practical systems problem-solving.
+            Start with a rough idea, a failed part, or a production requirement; scope a solution around the actual use case.
+          </p>
         </div>
-        <Link href="/portfolio" className="rounded-xl bubble px-4 py-2 text-sm font-semibold">View portfolio</Link>
+        <Link href="/portfolio" className="rounded-xl bubble px-5 py-3 text-sm font-semibold">
+          Explore capabilities
+        </Link>
       </section>
 
-      {/* WHAT WE DO — Row 1 */}
+      {/* SERVICE AREAS */}
       <section className="space-y-4">
-        <div className="rounded-3xl panel p-3">
-          <div className="grid md:grid-cols-3 gap-3">
-            <article className="card rounded-2xl p-5">
-              <h3 className="text-lg font-semibold">Consult & Design</h3>
-              <p className="mt-2 text-sm">
-                Bring the idea; we refine CAD, check tolerances, and plan for real-world use and manufacturability.
-              </p>
-            </article>
-            <article className="card rounded-2xl p-5">
-              <h3 className="text-lg font-semibold">Rapid Prototyping</h3>
-              <p className="mt-2 text-sm">
-                Iterative prints in functional materials so you can test fit, ergonomics, and performance quickly.
-              </p>
-            </article>
-            <article className="card rounded-2xl p-5">
-              <h3 className="text-lg font-semibold">Thermoforming & Casting</h3>
-              <p className="mt-2 text-sm">
-                Patterns and tooling appropriate for forming and casting workflows—ideal for small runs and trials.
-              </p>
-            </article>
-          </div>
-        </div>
-
-        {/* WHAT WE DO — Row 2 (includes Standard Tolerances) */}
-        <div className="rounded-3xl panel p-3">
-          <div className="grid md:grid-cols-3 gap-3">
-            <article className="card rounded-2xl p-5">
-              <h3 className="text-lg font-semibold">DFAM for 3-Axis CNC</h3>
-              <p className="mt-2 text-sm">
-                We simplify geometries, fixturing, and stock usage so parts translate cleanly to 3-axis machining.
-              </p>
-            </article>
-            <article className="card rounded-2xl p-5">
-              <h3 className="text-lg font-semibold">Standard Tolerances</h3>
-              <p className="mt-2 text-sm">Tolerances depend on the geometry, material, process and inspection method; project requirements are confirmed before manufacture.</p>
-            </article>
-            <article className="card rounded-2xl p-5">
-              <h3 className="text-lg font-semibold">Popular Items</h3>
-              <p className="mt-2 text-sm">
-                A growing catalog of useful parts—customizable materials and sizes in{' '}
-                <Link href="/shop" className="underline">Shop Items</Link>.
-              </p>
-            </article>
-          </div>
+        <div className="grid gap-4 md:grid-cols-3">
+          <article className="card rounded-2xl p-6">
+            <h3 className="text-xl font-semibold">Mechanical Design & CAD</h3>
+            <p className="mt-3 text-sm leading-6">Part geometry, assemblies, drawings and design revisions that clarify the next manufacturing decision.</p>
+          </article>
+          <article className="card rounded-2xl p-6">
+            <h3 className="text-xl font-semibold">Prototypes & Custom Parts</h3>
+            <p className="mt-3 text-sm leading-6">Iterative builds to explore fit, function and materials before a larger commitment.</p>
+          </article>
+          <article className="card rounded-2xl p-6">
+            <h3 className="text-xl font-semibold">Manufacturing & Systems Support</h3>
+            <p className="mt-3 text-sm leading-6">Design-for-manufacturing, fixtures, process challenges and practical technical workflows.</p>
+          </article>
         </div>
       </section>
 
@@ -143,11 +117,10 @@ export default function HomePage() {
             />
           </figure>
           <div className="p-6 md:p-10 flex flex-col justify-center">
-            <div className="text-sm text-slate-300">Parametric Modeling, Production-ready Details</div>
-            <h3 className="mt-2 text-2xl font-semibold text-white">Services You Can Trust</h3>
+            <div className="text-sm text-slate-300">CAD, drawings & technical decisions</div>
+            <h3 className="mt-2 text-2xl font-semibold text-white">Engineering work that moves decisions forward</h3>
             <p className="mt-3 text-slate-200">
-              We take your designs seriously. Our team ensures that every part is modeled with precision
-              and creation in mind ensuring accuracy and flexibility for your projects. 
+              Clear models and documentation help teams review geometry, discuss tradeoffs and decide what needs to be prototyped, tested or produced next. 
             </p>
           </div>
         </div>
@@ -157,16 +130,16 @@ export default function HomePage() {
       <section className="rounded-3xl panel-inverse p-6 md:p-10">
         <div className="md:flex items-center justify-between gap-6">
           <div>
-            <h3 className="text-2xl font-semibold text-white">Have files ready?</h3>
+            <h3 className="text-2xl font-semibold text-white">Have a technical problem to solve?</h3>
             <p className="text-slate-200">
-              Drag-and-drop your CAD or scan files. We support most common formats.
+              Tell us the application, constraints and intended outcome. We can arrange file transfer after scoping your request.
             </p>
           </div>
           <Link
             href="/design"
             className="mt-4 md:mt-0 rounded-xl bubble px-4 py-2 text-sm font-semibold hover:brightness-110"
           >
-            Request a quote
+            Discuss your project
           </Link>
         </div>
       </section>
