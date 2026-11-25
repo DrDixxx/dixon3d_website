@@ -150,6 +150,34 @@ export default function EngineeringCapabilitiesPage() {
         </div>
       </section>
 
+      <section className="rounded-3xl panel p-7 sm:p-10">
+        <p className="text-xs font-semibold uppercase tracking-wider text-sky-200">Technical foundation</p>
+        <h2 className="mt-3 text-2xl font-semibold text-white sm:text-3xl">
+          Experience informed by real production environments
+        </h2>
+        <p className="mt-4 max-w-4xl text-sm leading-7 text-slate-200">
+          Dixon3D draws on professional experience in industrial additive-manufacturing applications,
+          equipment troubleshooting, CAD-based design improvements, and connecting shop-floor needs
+          with technical software workflows. This background informs how projects are scoped,
+          documented, tested and communicated; individual project results are established through
+          their own requirements and verification.
+        </p>
+        <div className="mt-6 grid gap-3 sm:grid-cols-3">
+          <div className="rounded-xl bg-white/5 p-4">
+            <h3 className="font-semibold text-white">CAD & manufacturing</h3>
+            <p className="mt-2 text-sm text-slate-300">Geometry, assemblies, additive processes, production constraints.</p>
+          </div>
+          <div className="rounded-xl bg-white/5 p-4">
+            <h3 className="font-semibold text-white">Industrial problem-solving</h3>
+            <p className="mt-2 text-sm text-slate-300">Equipment diagnostics, process issues, and practical iteration.</p>
+          </div>
+          <div className="rounded-xl bg-white/5 p-4">
+            <h3 className="font-semibold text-white">Systems integration</h3>
+            <p className="mt-2 text-sm text-slate-300">Equipment-data workflows, technical requirements, and validation.</p>
+          </div>
+        </div>
+      </section>
+
       <section id="approach" className="space-y-5">
         <div className="max-w-3xl">
           <p className="text-xs font-semibold uppercase tracking-wider text-sky-200">How projects move forward</p>

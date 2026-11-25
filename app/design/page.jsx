@@ -80,8 +80,8 @@ export default function DesignPage() {
         <div className="grid md:grid-cols-2 gap-4">
           <article className="card rounded-2xl p-5"><h3 className="text-lg font-semibold">Consult & Design</h3><p className="mt-2 text-sm">Review CAD, define important dimensions, and evaluate manufacturability based on requirements.</p></article>
           <article className="card rounded-2xl p-5"><h3 className="text-lg font-semibold">Rapid Prototyping</h3><p className="mt-2 text-sm">Iterative parts for reviewing fit and exploring design choices.</p></article>
-          <article className="card rounded-2xl p-5"><h3 className="text-lg font-semibold">Thermoforming & Casting</h3><p className="mt-2 text-sm">Explore patterns, fixtures and tooling requirements for a proposed process.</p></article>
-          <article className="card rounded-2xl p-5"><h3 className="text-lg font-semibold">DFAM for 3-Axis CNC</h3><p className="mt-2 text-sm">Review geometry, material and manufacturing-process tradeoffs.</p></article>
+          <article className="card rounded-2xl p-5"><h3 className="text-lg font-semibold">Patterns & Tooling Review</h3><p className="mt-2 text-sm">Explore patterns, fixtures and tooling requirements for a proposed process.</p></article>
+          <article className="card rounded-2xl p-5"><h3 className="text-lg font-semibold">Design for Manufacturing</h3><p className="mt-2 text-sm">Review geometry, material and manufacturing-process tradeoffs.</p></article>
         </div>
       </section>
 
@@ -160,7 +160,7 @@ export default function DesignPage() {
             <textarea name="notes" rows="5" className="w-full rounded-xl input-soft px-3 py-2 text-sm"></textarea>
           </label>
 
-          <p className="text-sm text-slate-300">This form collects project details only. It does not upload files.</p>
+          <p className="text-sm text-slate-300">Have drawings or reference photos? Mention them above and we will coordinate file sharing during follow-up.</p>
 
           <div className="flex gap-3">
             <button type="submit" className="rounded-xl bubble px-5 py-2.5 text-sm font-semibold">Submit</button>
